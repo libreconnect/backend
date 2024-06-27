@@ -1,0 +1,9 @@
+{{#var serviceName = generators.serviceName(name)}}
+{{#var serviceFileName = generators.serviceFileName(name)}}
+{{{
+  exports({
+    to: app.makePath("apps", name, "services" , serviceFileName)
+  })
+}}}
+export default class {{ serviceName }} {
+}

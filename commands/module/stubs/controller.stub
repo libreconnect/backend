@@ -1,0 +1,46 @@
+{{#var controllerName = generators.controllerName(name)}}
+{{#var controllerFileName = generators.controllerFileName(name)}}
+{{#var controllerFileName = generators.controllerFileName(name)}}
+{{#var serviceName = generators.serviceName(name)}}
+{{{
+  exports({
+    to: app.makePath("apps", module, "controllers" , controllerFileName)
+  })
+}}}
+import type { HttpContext } from '@adonisjs/core/http'
+{{#if includeServiceInjection}}
+import { inject } from '@adonisjs/core'
+import {{ serviceName }} from '#{{ generators.importPath("apps", module, "services" , string.snakeCase(serviceName)) }}'
+{{/if}}
+
+{{#if includeServiceInjection}}
+@inject()
+{{/if}}
+export default class {{ controllerName }} {
+  {{#if includeServiceInjection}}constructor(private {{ string.camelCase(serviceName) }}: {{ serviceName }}) {}{{/if}}
+
+  /**
+   * Display a list of resource
+   */
+  async index({}: HttpContext) {}
+
+  /**
+   * Handle form submission for the create action
+   */
+  async store({ request }: HttpContext) {}
+
+  /**
+   * Show individual record
+   */
+  async show({ params }: HttpContext) {}
+
+  /**
+   * Handle form submission for the edit action
+   */
+  async update({ params, request }: HttpContext) {}
+
+  /**
+   * Delete record
+   */
+  async destroy({ params }: HttpContext) {}
+}

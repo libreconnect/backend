@@ -1,0 +1,10 @@
+{{{
+  exports({
+    to: app.makePath("apps", name, "routes.ts")
+  })
+}}}
+import router from '@adonisjs/core/services/router'
+
+router.group(() => {
+
+}).prefix('{{ name }}')

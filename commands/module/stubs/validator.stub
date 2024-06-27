@@ -1,0 +1,32 @@
+{{#var validatorName = generators.validatorFileName(name)}}
+{{#var validatorFileName = generators.validatorFileName(name)}}
+{{#var createAction = generators.validatorActionName(name, 'create')}}
+{{#var updateAction = generators.validatorActionName(name, 'update')}}
+{{#var createSchema = string.pascalCase('create' + string.pascalCase(name) + 'Schema')}}
+{{#var updateSchema = string.pascalCase('update' + string.pascalCase(name) + 'Schema')}}
+{{{
+  exports({
+    to: app.makePath("apps", module, "validators", validatorFileName)
+  })
+}}}
+import vine from '@vinejs/vine'
+import { Infer } from '@vinejs/vine/types'
+
+/**
+ * Validator to validate the payload when creating
+ * a new {{ validatorName }}.
+ */
+export const {{ createAction }} = vine.compile(
+  vine.object({})
+)
+
+/**
+ * Validator to validate the payload when updating
+ * an existing {{ validatorName }}.
+ */
+export const {{ updateAction }} = vine.compile(
+  vine.object({})
+)
+
+export type {{ createSchema }} = Infer<typeof {{ createAction }}>
+export type {{ updateSchema }} = Infer<typeof {{ updateAction }}>
