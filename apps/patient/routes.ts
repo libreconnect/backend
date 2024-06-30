@@ -9,7 +9,7 @@ router
   .group(() => {
     router
       .group(() => {
-        router.post('/', [PatientController, 'create'])
+        router.post('/', [PatientController, 'store'])
         router.get('/:id', [PatientController, 'show'])
 
         router

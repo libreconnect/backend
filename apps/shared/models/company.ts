@@ -1,4 +1,4 @@
-import Professional from '#apps/shared/models/professional'
+import Professionnal from '#apps/shared/models/professionnal'
 import { BaseModel, beforeCreate, column, hasMany } from '@adonisjs/lucid/orm'
 import type { HasMany } from '@adonisjs/lucid/types/relations'
 import { DateTime } from 'luxon'
@@ -32,8 +32,8 @@ export default class Company extends BaseModel {
   @column()
   declare nationalCode: string
 
-  @hasMany(() => Professional)
-  declare professionals: HasMany<typeof Professional>
+  @hasMany(() => Professionnal)
+  declare professionals: HasMany<typeof Professionnal>
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime

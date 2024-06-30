@@ -25,5 +25,10 @@ export const updatePatientValidator = vine.compile(
   })
 )
 
-export type CreatePatientSchema = Infer<typeof createPatientValidator>
 export type UpdatePatientSchema = Infer<typeof updatePatientValidator>
+
+export interface CreatePatientSchema {
+  name: string
+  dateOfBirth: string
+  oidcId: string
+}

@@ -3,10 +3,6 @@ import { inject } from '@adonisjs/core'
 import UserService from '#apps/user/services/user_service'
 import logger from '@adonisjs/core/services/logger'
 
-interface QueryParams {
-  sub: string
-}
-
 @inject()
 export default class UsersController {
   constructor(private userService: UserService) {}
@@ -19,4 +15,8 @@ export default class UsersController {
 
     return this.userService.status(sub)
   }
+}
+
+interface QueryParams {
+  sub: string
 }

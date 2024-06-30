@@ -23,14 +23,15 @@
     "#listeners/*": "./app/listeners/*.js",
     "#events/*": "./app/events/*.js",
     "#middleware/*": "./app/middleware/*.js",
-    "#validators/*": "./app/validators/*.js",
+    "#validators/*": "./apps/*.js",
     "#providers/*": "./providers/*.js",
     "#policies/*": "./app/policies/*.js",
     "#abilities/*": "./app/abilities/*.js",
     "#database/*": "./database/*.js",
     "#start/*": "./start/*.js",
     "#tests/*": "./tests/*.js",
-    "#config/*": "./config/*.js"
+    "#config/*": "./config/*.js",
+    "#interfaces/*": "./apps/*.js"
   },
   "devDependencies": {
     "@adonisjs/assembler": "^7.7.0",

@@ -11,7 +11,14 @@ export default class PatientsController {
     return this.patientService.findById(params.id)
   }
 
-  async create({ request }: HttpContext) {
+  /**
+   * @store
+   * @responseBody 201 - <Patient>
+   * @responseBody 403 - Forbidden
+   * @responseBody 401 - Unauthorized
+   * @requestBody <CreatePatientSchema>
+   */
+  async store({ request }: HttpContext) {
     const data = await request.validateUsing(createPatientValidator)
 
     return this.patientService.create(data)
