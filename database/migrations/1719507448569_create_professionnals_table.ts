@@ -8,11 +8,12 @@ export default class extends BaseSchema {
       table.string('id').primary()
       table.string('name').notNullable()
       table.string('oidc_id').unique().notNullable().index('oidc_id_professionnal_index')
+      table.string('licence_number').notNullable().unique()
       table
         .string('company_id')
         .references('id')
         .inTable('companies')
-        .notNullable()
+        .nullable()
         .index('company_id_index')
 
       table.timestamp('created_at')
