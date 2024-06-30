@@ -1,6 +1,6 @@
+import { generateSnowflake } from '#apps/shared/services/snowflake_service'
 import { BaseModel, beforeCreate, column } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
-import { randomUUID } from 'node:crypto'
 
 export default class Professional extends BaseModel {
   @column({ isPrimary: true })
@@ -29,6 +29,6 @@ export default class Professional extends BaseModel {
 
   @beforeCreate()
   static async generateUuid(model: Professional) {
-    model.id = randomUUID()
+    model.id = generateSnowflake()
   }
 }

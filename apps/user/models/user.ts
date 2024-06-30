@@ -1,7 +1,7 @@
+import { generateSnowflake } from '#apps/shared/services/snowflake_service'
 import { DbAccessTokensProvider } from '@adonisjs/auth/access_tokens'
 import { BaseModel, beforeCreate, column } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
-import { randomUUID } from 'node:crypto'
 
 export default class User extends BaseModel {
   @column({ isPrimary: true })
@@ -15,7 +15,7 @@ export default class User extends BaseModel {
 
   @beforeCreate()
   static async generateUuid(model: User) {
-    model.id = randomUUID()
+    model.id = generateSnowflake()
   }
 
   static accessTokens = DbAccessTokensProvider.forModel(User)

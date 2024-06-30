@@ -17,12 +17,10 @@ export class JwtGuard<UserProvider extends JwtUserProviderContract<unknown>>
   implements GuardContract<UserProvider[typeof symbols.PROVIDER_REAL_USER]>
 {
   #ctx: HttpContext
-  #userProvider: UserProvider
   #keycloakService: KeycloakService
 
-  constructor(ctx: HttpContext, userProvider: UserProvider, keycloakService: KeycloakService) {
+  constructor(ctx: HttpContext, keycloakService: KeycloakService) {
     this.#ctx = ctx
-    this.#userProvider = userProvider
     this.#keycloakService = keycloakService
   }
 

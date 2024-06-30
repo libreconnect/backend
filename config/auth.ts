@@ -3,11 +3,6 @@ import KeycloakService from '#apps/authentication/services/keycloak_service'
 import { defineConfig } from '@adonisjs/auth'
 import { tokensGuard, tokensUserProvider } from '@adonisjs/auth/access_tokens'
 
-const userProvider = tokensUserProvider({
-  model: () => import('#apps/user/models/user'),
-  tokens: 'accessTokens',
-})
-
 const authConfig = defineConfig({
   default: 'jwt',
   guards: {
@@ -18,7 +13,7 @@ const authConfig = defineConfig({
       }),
     }),
     jwt: (ctx) => {
-      return new JwtGuard(ctx, userProvider, new KeycloakService())
+      return new JwtGuard(ctx, new KeycloakService())
     },
   },
 })

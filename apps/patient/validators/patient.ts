@@ -6,7 +6,11 @@ import { Infer } from '@vinejs/vine/types'
  * a new patient.ts.
  */
 export const createPatientValidator = vine.compile(
-  vine.object({})
+  vine.object({
+    name: vine.string(),
+    dateOfBirth: vine.string(),
+    oidcId: vine.string(),
+  })
 )
 
 /**
@@ -14,7 +18,11 @@ export const createPatientValidator = vine.compile(
  * an existing patient.ts.
  */
 export const updatePatientValidator = vine.compile(
-  vine.object({})
+  vine.object({
+    name: vine.string(),
+    dateOfBirth: vine.date(),
+    oidcId: vine.string(),
+  })
 )
 
 export type CreatePatientSchema = Infer<typeof createPatientValidator>

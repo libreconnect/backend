@@ -1,4 +1,4 @@
-import Professional from '#apps/professionnal/models/professional'
+import Professional from '#apps/shared/models/professional'
 import { BaseModel, beforeCreate, column, hasMany } from '@adonisjs/lucid/orm'
 import type { HasMany } from '@adonisjs/lucid/types/relations'
 import { DateTime } from 'luxon'
@@ -10,6 +10,27 @@ export default class Company extends BaseModel {
 
   @column()
   declare name: string
+
+  @column()
+  declare address: string
+
+  @column()
+  declare city: string
+
+  @column()
+  declare country: string
+
+  @column()
+  declare zipCode: string
+
+  @column()
+  declare phone: string
+
+  @column()
+  declare email: string
+
+  @column()
+  declare nationalCode: string
 
   @hasMany(() => Professional)
   declare professionals: HasMany<typeof Professional>

@@ -9,6 +9,8 @@
 
 import router from '@adonisjs/core/services/router'
 import { middleware } from './kernel.js'
+import AutoSwagger from 'adonis-autoswagger'
+import swagger from '#config/swagger'
 
 router
   .get('/', async ({ auth }) => {
@@ -18,3 +20,11 @@ router
     }
   })
   .middleware(middleware.auth())
+
+router.get('/swagger', async () => {
+  return AutoSwagger.default.docs(router.toJSON(), swagger)
+})
+
+router.get('/docs', async () => {
+  return AutoSwagger.default.scalar('/swagger')
+})

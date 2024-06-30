@@ -6,7 +6,16 @@ import { Infer } from '@vinejs/vine/types'
  * a new company.ts.
  */
 export const createCompanyValidator = vine.compile(
-  vine.object({})
+  vine.object({
+    name: vine.string(),
+    address: vine.string(),
+    city: vine.string(),
+    country: vine.string(),
+    zipCode: vine.string(),
+    phone: vine.string(),
+    email: vine.string().optional(),
+    nationalCode: vine.string(),
+  })
 )
 
 /**
@@ -17,5 +26,15 @@ export const updateCompanyValidator = vine.compile(
   vine.object({})
 )
 
+export const getComaniesValidator = vine.compile(
+  vine.object({
+    page: vine.number().optional(),
+    limit: vine.number().optional(),
+    nationalCode: vine.string().optional(),
+    search: vine.string().optional(),
+  })
+)
+
 export type CreateCompaniesSchema = Infer<typeof createCompanyValidator>
 export type UpdateCompaniesSchema = Infer<typeof updateCompanyValidator>
+export type GetCompaniesSchema = Infer<typeof getComaniesValidator>
