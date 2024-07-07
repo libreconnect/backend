@@ -47,12 +47,16 @@ export class JwtGuard<UserProvider extends JwtUserProviderContract<unknown>>
     }
     const key = await this.#keycloakService.getPublicCert()
     const publicKey = `-----BEGIN CERTIFICATE-----\n${key}\n-----END CERTIFICATE-----`
-    const payload = jwt.verify(token, publicKey, { algorithms: ['RS256'] })
-    if (typeof payload !== 'object' || !('sub' in payload)) {
-      console.log('error payload')
-
-      logger.error('Invalid token payload', payload)
-      throw new errors.E_UNAUTHORIZED_ACCESS('Invalid token', {
+    try {
+      const payload = jwt.verify(token, publicKey, { algorithms: ['RS256'] })
+      if (typeof payload !== 'object' || !('sub' in payload)) {
+        throw new errors.E_UNAUTHORIZED_ACCESS('Invalid token', {
+          guardDriverName: this.driverName,
+        })
+      }
+      this.user = payload
+    } catch (err) {
+      throw new errors.E_UNAUTHORIZED_ACCESS('Unauthorized access', {
         guardDriverName: this.driverName,
       })
     }
@@ -63,8 +67,6 @@ export class JwtGuard<UserProvider extends JwtUserProviderContract<unknown>>
     //     guardDriverName: this.driverName,
     //   })
     // }
-
-    this.user = payload
   }
 
   async check(): Promise<boolean> {
