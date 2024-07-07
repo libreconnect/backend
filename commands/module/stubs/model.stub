@@ -7,7 +7,7 @@
 }}}
 import { BaseModel, beforeCreate, column } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
-import { randomUUID } from 'node:crypto'
+import { generateSnowflake } from '#apps/shared/services/snowflake_service'
 
 export default class {{ modelName }} extends BaseModel {
   @column({ isPrimary: true })
@@ -20,9 +20,7 @@ export default class {{ modelName }} extends BaseModel {
   declare updatedAt: DateTime | null
 
   @beforeCreate()
-  public static async generateUuid(model: {{ modelName }}) {
-    if (model.$dirty.id) {
-      model.id = randomUUID()
-    }
+  static async generateUuid(model: {{ modelName }}) {
+    model.id = generateSnowflake()
   }
 }
