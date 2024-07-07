@@ -20,7 +20,7 @@ export default class PatientService {
   }
 
   async findByOidcId(oidcId: string) {
-    return Patient.query().where('oidc_id', oidcId).first()
+    return Patient.query().where('oidc_id', oidcId).firstOrFail()
   }
 
   async create(payload: CreatePatientSchema) {
