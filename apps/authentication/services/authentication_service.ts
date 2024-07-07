@@ -1,6 +1,8 @@
 import PatientService from '#apps/patient/services/patient_service'
 import { inject } from '@adonisjs/core'
-import { AuthenticationException } from '../exceptions/authentication.js'
+import { AuthenticationException } from '#apps/authentication/exceptions/authentication'
+import { JWTPayload } from '#apps/authentication/contracts/jwt'
+import Patient from '#apps/shared/models/patient'
 
 @inject()
 export default class AuthenticationService {
@@ -16,5 +18,9 @@ export default class AuthenticationService {
     }
 
     return patient
+  }
+
+  getOidcId(guard: string, user: any): string {
+    return guard === 'jwt' ? (user as JWTPayload).sub : (user as Patient).oidcId
   }
 }
