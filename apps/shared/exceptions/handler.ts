@@ -1,7 +1,8 @@
 import app from '@adonisjs/core/services/app'
 import { HttpContext, ExceptionHandler } from '@adonisjs/core/http'
 import { errors } from '@adonisjs/core'
-
+import { errors as authErrors } from '@adonisjs/auth'
+import { errors as lucidErrors } from '@adonisjs/lucid'
 export default class HttpExceptionHandler extends ExceptionHandler {
   /**
    * In debug mode, the exception handler will display verbose errors
@@ -16,6 +17,20 @@ export default class HttpExceptionHandler extends ExceptionHandler {
   async handle(error: unknown, ctx: HttpContext) {
     console.log(typeof error)
     if (error instanceof errors.E_ROUTE_NOT_FOUND) {
+      ctx.response.status(404).send({
+        message: error.message,
+        status: error.status,
+      })
+      return
+    }
+    if (error instanceof authErrors.E_UNAUTHORIZED_ACCESS) {
+      ctx.response.status(401).send({
+        message: error.message,
+        status: error.status,
+      })
+      return
+    }
+    if (error instanceof lucidErrors.E_ROW_NOT_FOUND) {
       ctx.response.status(404).send({
         message: error.message,
         status: error.status,
