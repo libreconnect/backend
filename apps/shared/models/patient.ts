@@ -1,4 +1,5 @@
 import { generateSnowflake } from '#apps/shared/services/snowflake_service'
+import { DbAccessTokensProvider } from '@adonisjs/auth/access_tokens'
 import { BaseModel, beforeCreate, column } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
 
@@ -25,4 +26,10 @@ export default class Patient extends BaseModel {
   static async generateUuid(model: Patient) {
     model.id = generateSnowflake()
   }
+
+  static accessTokens = DbAccessTokensProvider.forModel(Patient, {
+    table: 'api_tokens',
+    type: 'auth_token',
+    tokenSecretLength: 30,
+  })
 }

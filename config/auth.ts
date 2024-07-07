@@ -9,7 +9,7 @@ const authConfig = defineConfig({
     api: tokensGuard({
       provider: tokensUserProvider({
         tokens: 'accessTokens',
-        model: () => import('#apps/user/models/user'),
+        model: () => import('#apps/shared/models/patient'),
       }),
     }),
     jwt: (ctx) => {
