@@ -1,7 +1,7 @@
 import vine from '@vinejs/vine'
 import { Infer } from '@vinejs/vine/types'
 export const createStepObject = vine.object({
-  step: vine.number(),
+  steps: vine.number(),
   startDate: vine.string(),
   endDate: vine.string(),
 })

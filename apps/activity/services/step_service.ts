@@ -16,13 +16,13 @@ export default class StepService {
         patientId,
         endDate: endTimestamp,
         startDate: startTimestamp,
-        step: data.step,
+        step: data.steps,
       },
       {
         patientId,
         endDate: endTimestamp,
         startDate: startTimestamp,
-        step: data.step,
+        step: data.steps,
       }
     )
   }
@@ -32,7 +32,7 @@ export default class StepService {
     const promises = dto.steps.map((step) => {
       return this.firstOrCreate(step, patientId)
         .then((result) => {
-          logger.info({ result }, 'Step created')
+          logger.info(`step(${result.id}) created or found`)
           return result
         })
         .catch((error) => {
