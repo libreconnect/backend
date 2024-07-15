@@ -56,6 +56,7 @@ export default defineConfig({
     () => import('#apps/companies/routes'),
     () => import('#apps/professionnal/routes'),
     () => import('#apps/activity/routes'),
+    () => import('#apps/heart/routes'),
   ],
 
   /*
