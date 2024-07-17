@@ -2,17 +2,17 @@ import type { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
 import PatientHeartRatesService from '#apps/heart/services/patient_heart_rates_service'
 import logger from '@adonisjs/core/services/logger'
-import { createHeartValidator, HeartQueryValidator } from '#apps/heart/validators/heart'
+import { createHeartValidator, heartQueryValidator } from '#apps/heart/validators/heart'
 
 @inject()
 export default class PatientHeartRatesController {
   constructor(private heartService: PatientHeartRatesService) {}
 
   async show({ params }: HttpContext) {
-    logger.info('Fetching heart rate for patient %s', params.id)
-    const data = await params.validateUsing(HeartQueryValidator)
+    const data = await params.validateUsing(heartQueryValidator)
 
-    return this.heartService.findByPatientId(data.patientId)
+    logger.info('Fetching heart rate for patient %s', params.patientId)
+    return this.heartService.findByPatientId(data)
   }
 
   async store({ request }: HttpContext) {

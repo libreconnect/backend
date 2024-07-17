@@ -1,11 +1,38 @@
 import Heart from '#models/heart'
-import { CreateHeartSchema } from '#apps/heart/validators/heart'
+import { CreateHeartSchema, HeartQuerySchema } from '#apps/heart/validators/heart'
 import logger from '@adonisjs/core/services/logger'
 import HeartException from '#apps/heart/exceptions/heart_exception'
 
 export default class PatientHeartRatesService {
-  async findByPatientId(patientId: string) {
-    return Heart.query().where('patient_id', patientId)
+  async findByPatientId({
+    patientId,
+    startDate,
+    endDate,
+    minHeartRate,
+    maxHeartRate,
+  }: HeartQuerySchema) {
+    return Heart.query()
+      .if(patientId, (query) => {
+        query.where('patientId', patientId)
+      })
+      .if(startDate && startDate.isValid, (query) => {
+        const dateStr = startDate.toISO()
+        if (dateStr) {
+          query.where('startDate', '>=', dateStr)
+        }
+      })
+      .if(endDate && endDate.isValid, (query) => {
+        const dateStr = endDate.toISO()
+        if (dateStr) {
+          query.where('endDate', '<=', dateStr)
+        }
+      })
+      .if(minHeartRate, (query) => {
+        query.where('heartRate', '>=', minHeartRate)
+      })
+      .if(maxHeartRate, (query) => {
+        query.where('heartRate', '<=', maxHeartRate)
+      })
   }
 
   async create(payload: CreateHeartSchema): Promise<Heart> {

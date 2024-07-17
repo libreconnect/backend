@@ -8,7 +8,7 @@ import { DateTime } from 'luxon'
  */
 export const createHeartValidator = vine.compile(
   vine.object({
-    patientId: vine.string().optional(),
+    patientId: vine.string(),
     startDate: vine.date().optional(),
     endDate: vine.date().optional(),
     minHeartRate: vine.number(),
@@ -30,9 +30,9 @@ export const updateHeartValidator = vine.compile(
   })
 )
 
-export const HeartQueryValidator = vine.compile(
+export const heartQueryValidator = vine.compile(
   vine.object({
-    patientId: vine.string().optional(),
+    patientId: vine.string(),
     startDate: vine.string().optional(),
     endDate: vine.string().optional(),
     minHeartRate: vine.number().optional(),
@@ -43,6 +43,14 @@ export const HeartQueryValidator = vine.compile(
 export type CreateHeartSchema = Infer<typeof createHeartValidator>
 
 export interface UpdateHeartSchema {
+  patientId: string
+  startDate: DateTime
+  endDate: DateTime
+  minHeartRate: number
+  maxHeartRate: number
+}
+
+export interface HeartQuerySchema {
   patientId: string
   startDate: DateTime
   endDate: DateTime
