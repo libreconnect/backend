@@ -41,7 +41,7 @@ export default class PatientHeartRatesService {
     } catch (err) {
       logger.error(err)
       throw new HeartException('Failed to create heart rate data', {
-        code: 'E_HEART_CREATE',
+        code: 'E_HEART_RATE_CREATE',
         status: 500,
       })
     }
