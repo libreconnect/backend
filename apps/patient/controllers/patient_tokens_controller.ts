@@ -2,20 +2,27 @@ import { inject } from '@adonisjs/core'
 import { HttpContext } from '@adonisjs/core/http'
 import PatientService from '#apps/patient/services/patient_service'
 import Patient from '#apps/shared/models/patient'
+import PatientTokenPolicy from '#apps/patient/policies/patient_token_policy'
 
 @inject()
 export default class PatientTokensController {
-  constructor(protected patientService: PatientService) {}
+  constructor(private patientService: PatientService) {}
 
-  async store({ params, auth }: HttpContext) {
+  /**
+   * @store
+   * @summary Create patient token
+   * @responseBody 201 - { "patient": "<Patient>", "token": "<AccessToken>" }
+   * @responseBody 403 - Forbidden
+   * @responseBody 401 - Unauthorized
+   */
+  async store({ params, bouncer }: HttpContext) {
     const patient = await this.patientService.findById(params.patientId)
-    const authenticatedUser = auth.user
+    await bouncer.with(PatientTokenPolicy).authorize('create', patient)
 
     const token = await Patient.accessTokens.create(patient)
 
     return {
       patient,
-      user: authenticatedUser,
       token,
     }
   }
