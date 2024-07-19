@@ -13,7 +13,7 @@
       "#listeners/*": ["./app/listeners/*.js"],
       "#events/*": ["./app/events/*.js"],
       "#middleware/*": ["./apps/shared/middleware/*.js"],
-      "#validators/*": ["./app/validators/*.js"],
+      "#validators/*": ["./apps/*.js"],
       "#providers/*": ["./providers/*.js"],
       "#policies/*": ["./apps/shared/policies/*.js"],
       "#abilities/*": ["./apps/shared/abilities/*.js"],

@@ -11,6 +11,9 @@ importers:
       '@adonisjs/auth':
         specifier: ^9.2.3
         version: 9.2.3(@adonisjs/assembler@7.7.0(typescript@5.5.2))(@adonisjs/core@6.12.1(@adonisjs/assembler@7.7.0(typescript@5.5.2))(@vinejs/vine@2.1.0))(@adonisjs/lucid@21.1.0(@adonisjs/assembler@7.7.0(typescript@5.5.2))(@adonisjs/core@6.12.1(@adonisjs/assembler@7.7.0(typescript@5.5.2))(@vinejs/vine@2.1.0))(luxon@3.4.4)(pg@8.12.0))(@japa/api-client@2.0.3(@japa/assert@3.0.0(@japa/runner@3.1.4)(openapi-types@1.3.4))(@japa/runner@3.1.4))(@japa/plugin-adonisjs@3.0.1(@adonisjs/core@6.12.1(@adonisjs/assembler@7.7.0(typescript@5.5.2))(@vinejs/vine@2.1.0))(@japa/api-client@2.0.3(@japa/assert@3.0.0(@japa/runner@3.1.4)(openapi-types@1.3.4))(@japa/runner@3.1.4))(@japa/runner@3.1.4))
+      '@adonisjs/bouncer':
+        specifier: ^3.1.3
+        version: 3.1.3(@adonisjs/core@6.12.1(@adonisjs/assembler@7.7.0(typescript@5.5.2))(@vinejs/vine@2.1.0))
       '@adonisjs/core':
         specifier: ^6.12.0
         version: 6.12.1(@adonisjs/assembler@7.7.0(typescript@5.5.2))(@vinejs/vine@2.1.0)
@@ -27,8 +30,8 @@ importers:
         specifier: ^2.1.0
         version: 2.1.0
       adonis-autoswagger:
-        specifier: ^3.48.0
-        version: 3.48.0
+        specifier: ^3.50.0
+        version: 3.59.0
       jsonwebtoken:
         specifier: ^9.0.2
         version: 9.0.2
@@ -140,6 +143,18 @@ packages:
     engines: {node: '>=18.16.0'}
     peerDependencies:
       '@adonisjs/http-server': ^7.0.2
+
+  '@adonisjs/bouncer@3.1.3':
+    resolution: {integrity: sha512-MwoOUqeLFM4QgU3lRWdoaUsimJecE9x+pHz4f3rxAm/6AyPsGaVCX933nGp9SMEgo/w5+8OtklOcz268ZCi6sg==}
+    engines: {node: '>=18.16.0'}
+    peerDependencies:
+      '@adonisjs/core': ^6.2.0
+      '@adonisjs/i18n': ^2.0.0
+    peerDependenciesMeta:
+      '@adonisjs/core':
+        optional: true
+      '@adonisjs/i18n':
+        optional: true
 
   '@adonisjs/config@5.0.2':
     resolution: {integrity: sha512-NXjFqDHNGRTZ1EnA4zr20GFEt7qw/JvZ4ZV8/PzFyVc7dPoFprpoyE3bw7kmlKHhcQdBbF7YXCGB4q+HQUnqiQ==}
@@ -742,8 +757,8 @@ packages:
     engines: {node: '>=0.4.0'}
     hasBin: true
 
-  adonis-autoswagger@3.48.0:
-    resolution: {integrity: sha512-LtI6GKgkHRO96hLd6kUg6/xnIsibIwXAbpvs5SizZGijEv86e8C5PwyTyiRFxYRAppEa23NQZOlDDU/bZ4GRVw==}
+  adonis-autoswagger@3.59.0:
+    resolution: {integrity: sha512-MvdpGdbynPIUigZ313jpeLqXbM0r9l43xKqOaTPoRya+eVrmDsLGTyrRfWyOjyPK7G08u/EWYD3ScsG0hBaGRQ==}
 
   aggregate-error@4.0.1:
     resolution: {integrity: sha512-0poP0T7el6Vq3rstR8Mn4V/IQrpBLO6POkUSrN7RhyY+GF/InCFShQzsQ39T25gkHhLgSLByyAz+Kjb+c2L98w==}
@@ -3121,6 +3136,12 @@ snapshots:
       qs: 6.12.1
       raw-body: 2.5.2
 
+  '@adonisjs/bouncer@3.1.3(@adonisjs/core@6.12.1(@adonisjs/assembler@7.7.0(typescript@5.5.2))(@vinejs/vine@2.1.0))':
+    dependencies:
+      '@poppinss/utils': 6.7.3
+    optionalDependencies:
+      '@adonisjs/core': 6.12.1(@adonisjs/assembler@7.7.0(typescript@5.5.2))(@vinejs/vine@2.1.0)
+
   '@adonisjs/config@5.0.2':
     dependencies:
       '@poppinss/utils': 6.7.3
@@ -3826,7 +3847,7 @@ snapshots:
 
   acorn@8.12.0: {}
 
-  adonis-autoswagger@3.48.0:
+  adonis-autoswagger@3.59.0:
     dependencies:
       '@vinejs/vine': 2.1.0
       abstract-syntax-tree: 2.22.0
