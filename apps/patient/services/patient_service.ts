@@ -1,13 +1,14 @@
 import PatientException from '#apps/patient/exceptions/patient_exception'
 import Patient from '#apps/shared/models/patient'
-import { CreatePatientSchema } from '#apps/patient/validators/patient'
+import { CreatePatientSchema, PatientsQuerySchema } from '#apps/patient/validators/patient'
 import logger from '@adonisjs/core/services/logger'
 import { DateTime } from 'luxon'
 
 export default class PatientService {
-  async findAll() {
-    return Patient.query().paginate(1, 10)
+  async findAll({ page = 1, limit = 10 }: PatientsQuerySchema) {
+    return Patient.query().paginate(page, limit)
   }
+
   async findById(patientId: string) {
     try {
       return await Patient.query().where('id', patientId).firstOrFail()
