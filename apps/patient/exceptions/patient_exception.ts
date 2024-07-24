@@ -5,6 +5,8 @@ export default class PatientException extends Exception {
   async handle(error: this, ctx: HttpContext) {
     ctx.response.status(error.status).send({
       message: error.message,
+      status: error.status,
+      code: error.code,
     })
   }
 }

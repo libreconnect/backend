@@ -3,17 +3,28 @@ import Patient from '#apps/shared/models/patient'
 import { CreatePatientSchema, PatientsQuerySchema } from '#apps/patient/validators/patient'
 import logger from '@adonisjs/core/services/logger'
 import { DateTime } from 'luxon'
+import { inject } from '@adonisjs/core'
+import ProfessionnalService from '#apps/professionnal/services/professionnal_service'
+import * as patientErrors from '#apps/patient/errors'
 
+@inject()
 export default class PatientService {
-  async findAll({ page = 1, limit = 10 }: PatientsQuerySchema) {
-    return Patient.query().paginate(page, limit)
+  constructor(private professionnalService: ProfessionnalService) {}
+
+  async findAll({ page = 1, limit = 10 }: PatientsQuerySchema, professionnalOidcId: string) {
+    try {
+      await this.professionnalService.findByOidcId(professionnalOidcId)
+      return Patient.query().paginate(page, limit)
+    } catch (err) {
+      throw new patientErrors.E_PATIENT_FETCH_UNAUTHORIZED()
+    }
   }
 
   async findById(patientId: string) {
     try {
       return await Patient.query().where('id', patientId).firstOrFail()
-    } catch {
-      throw new PatientException('Patient not found', {
+    } catch (err) {
+      throw new PatientException(err.message, {
         code: 'E_PATIENT_NOT_FOUND',
         status: 404,
       })

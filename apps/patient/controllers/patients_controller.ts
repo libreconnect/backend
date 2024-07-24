@@ -2,6 +2,7 @@ import type { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
 import PatientService from '#apps/patient/services/patient_service'
 import { createPatientValidator, patientsQueryValidator } from '#apps/patient/validators/patient'
+import { JWTPayload } from '#apps/authentication/contracts/jwt'
 
 @inject()
 export default class PatientsController {
@@ -16,10 +17,10 @@ export default class PatientsController {
    * @paramQuery page - Page number - @type(number)
    * @paramQuery limit - Number of items per page - @type(number)
    */
-  async index({ request }: HttpContext) {
+  async index({ request, auth }: HttpContext) {
     const { page, limit } = await request.validateUsing(patientsQueryValidator)
-
-    return this.patientService.findAll({ page, limit })
+    const user = auth.user as JWTPayload
+    return this.patientService.findAll({ page, limit }, user.sub)
   }
 
   /**
