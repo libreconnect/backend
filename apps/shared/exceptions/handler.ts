@@ -3,6 +3,8 @@ import { HttpContext, ExceptionHandler } from '@adonisjs/core/http'
 import { errors } from '@adonisjs/core'
 import { errors as authErrors } from '@adonisjs/auth'
 import { errors as lucidErrors } from '@adonisjs/lucid'
+import * as patientErrors from '#apps/patient/errors'
+
 export default class HttpExceptionHandler extends ExceptionHandler {
   /**
    * In debug mode, the exception handler will display verbose errors
@@ -15,7 +17,8 @@ export default class HttpExceptionHandler extends ExceptionHandler {
    * response to the client
    */
   async handle(error: unknown, ctx: HttpContext) {
-    console.log(typeof error)
+    console.log('error', error)
+
     if (error instanceof errors.E_ROUTE_NOT_FOUND) {
       ctx.response.status(404).send({
         message: error.message,
@@ -37,6 +40,16 @@ export default class HttpExceptionHandler extends ExceptionHandler {
       })
       return
     }
+
+    if (error instanceof patientErrors.E_PATIENT_FETCH_UNAUTHORIZED) {
+      ctx.response.status(403).send({
+        message: error.message,
+        status: error.status,
+        code: error.code,
+      })
+      return
+    }
+
     return super.handle(error, ctx)
   }
 
