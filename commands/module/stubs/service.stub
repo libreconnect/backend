@@ -2,7 +2,7 @@
 {{#var serviceFileName = generators.serviceFileName(name)}}
 {{{
   exports({
-    to: app.makePath("apps", name, "services" , serviceFileName)
+    to: app.makePath("apps", module, "services" , serviceFileName)
   })
 }}}
 export default class {{ serviceName }} {
