@@ -27,5 +27,13 @@ export default await Env.create(new URL('../', import.meta.url), {
   DB_PORT: Env.schema.number(),
   DB_USER: Env.schema.string(),
   DB_PASSWORD: Env.schema.string.optional(),
-  DB_DATABASE: Env.schema.string()
+  DB_DATABASE: Env.schema.string(),
+
+  KEYCLOAK_URL: Env.schema.string(),
+  KEYCLOAK_REALM: Env.schema.string(),
+  KEYCLOAK_CLIENT_ID: Env.schema.string(),
+  KEYCLOAK_CLIENT_SECRET: Env.schema.string(),
+
+  KEYCLOAK_USER_USERNAME: Env.schema.string.optional(),
+  KEYCLOAK_USER_PASSWORD: Env.schema.string.optional(),
 })
