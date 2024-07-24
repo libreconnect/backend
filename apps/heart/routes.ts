@@ -10,7 +10,7 @@ router
         router
           .group(() => {
             router.post('/', [PatientHeartRatesController, 'store'])
-            router.get('/', [PatientHeartRatesController, 'show'])
+            router.get('/:patientId', [PatientHeartRatesController, 'show'])
           })
           .prefix('rates')
       })

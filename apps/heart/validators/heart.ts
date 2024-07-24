@@ -1,6 +1,5 @@
 import vine from '@vinejs/vine'
 import { Infer } from '@vinejs/vine/types'
-import { DateTime } from 'luxon'
 
 /**
  * Validator to validate the payload when creating
@@ -32,28 +31,14 @@ export const updateHeartValidator = vine.compile(
 
 export const heartQueryValidator = vine.compile(
   vine.object({
-    patientId: vine.string(),
     startDate: vine.string().optional(),
     endDate: vine.string().optional(),
+    page: vine.number().optional(),
+    limit: vine.number().optional(),
     minHeartRate: vine.number().optional(),
     maxHeartRate: vine.number().optional(),
   })
 )
 
 export type CreateHeartSchema = Infer<typeof createHeartValidator>
-
-export interface UpdateHeartSchema {
-  patientId: string
-  startDate: DateTime
-  endDate: DateTime
-  minHeartRate: number
-  maxHeartRate: number
-}
-
-export interface HeartQuerySchema {
-  patientId: string
-  startDate: DateTime
-  endDate: DateTime
-  minHeartRate: number
-  maxHeartRate: number
-}
+export type HeartQuerySchema = Infer<typeof heartQueryValidator>
