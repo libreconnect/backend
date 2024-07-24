@@ -1,43 +1,36 @@
-import Heart from '#models/heart'
 import { CreateHeartSchema, HeartQuerySchema } from '#apps/heart/validators/heart'
 import logger from '@adonisjs/core/services/logger'
 import HeartException from '#apps/heart/exceptions/heart_exception'
+import HeartRate from '#apps/shared/models/heart_rate'
 
 export default class PatientHeartRatesService {
-  async findByPatientId({
-    patientId,
-    startDate,
-    endDate,
-    minHeartRate,
-    maxHeartRate,
-  }: HeartQuerySchema) {
-    return Heart.query()
-      .if(patientId, (query) => {
-        query.where('patientId', patientId)
+  async findByPatientId(
+    { startDate, endDate, minHeartRate, maxHeartRate, page = 1, limit = 10 }: HeartQuerySchema,
+    patientId: string
+  ) {
+    return HeartRate.query()
+      .where('patient_id', patientId)
+      .if(startDate, (query) => {
+        // TODO: Fix this
+        query.where('created_at', '>=', startDate!)
       })
-      .if(startDate && startDate.isValid, (query) => {
-        const dateStr = startDate.toISO()
-        if (dateStr) {
-          query.where('startDate', '>=', dateStr)
-        }
-      })
-      .if(endDate && endDate.isValid, (query) => {
-        const dateStr = endDate.toISO()
-        if (dateStr) {
-          query.where('endDate', '<=', dateStr)
-        }
+      .if(endDate, (query) => {
+        // TODO: Fix this
+        query.where('created_at', '<=', endDate!)
       })
       .if(minHeartRate, (query) => {
-        query.where('heartRate', '>=', minHeartRate)
+        query.where('value', '>=', minHeartRate!)
       })
       .if(maxHeartRate, (query) => {
-        query.where('heartRate', '<=', maxHeartRate)
+        query.where('value', '<=', maxHeartRate!)
       })
+      .paginate(page, limit)
   }
 
-  async create(payload: CreateHeartSchema): Promise<Heart> {
+  async create(_payload: CreateHeartSchema) {
     try {
-      return Heart.create(payload)
+      //const startDate = DateTime.fromISO(payload.startDate)
+      //return HeartRate.create(payload)
     } catch (err) {
       logger.error(err)
       throw new HeartException('Failed to create heart rate data', {
