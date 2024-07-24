@@ -6,8 +6,8 @@ export type JwtGuardUser<RealUser> = {
   getOriginal(): RealUser
 }
 import jwt from 'jsonwebtoken'
-import logger from '@adonisjs/core/services/logger'
-import KeycloakService from '../services/keycloak_service.js'
+import KeycloakService from '#apps/authentication/services/keycloak_service'
+import * as authErrors from '#apps/authentication/errors'
 
 export interface JwtUserProviderContract<RealUser> {
   [symbols.PROVIDER_REAL_USER]: RealUser
@@ -31,34 +31,33 @@ export class JwtGuard<UserProvider extends JwtUserProviderContract<unknown>>
   isAuthenticated: boolean = false
   user?: UserProvider[typeof symbols.PROVIDER_REAL_USER]
 
+  #authenticationFailed() {
+    const error = new authErrors.E_AUTHENTICATION_UNAUTHORIZED()
+
+    return error
+  }
+
   async authenticate() {
     const authHeader = this.#ctx.request.header('Authorization')
     if (!authHeader) {
-      throw new errors.E_UNAUTHORIZED_ACCESS('Unauthorized access', {
-        guardDriverName: this.driverName,
-      })
+      throw this.#authenticationFailed()
     }
 
     const [, token] = authHeader.split('Bearer ')
     if (!token) {
-      throw new errors.E_UNAUTHORIZED_ACCESS('Unauthorized access', {
-        guardDriverName: this.driverName,
-      })
+      throw this.#authenticationFailed()
     }
     const key = await this.#keycloakService.getPublicCert()
     const publicKey = `-----BEGIN CERTIFICATE-----\n${key}\n-----END CERTIFICATE-----`
+
     try {
       const payload = jwt.verify(token, publicKey, { algorithms: ['RS256'] })
       if (typeof payload !== 'object' || !('sub' in payload)) {
-        throw new errors.E_UNAUTHORIZED_ACCESS('Invalid token', {
-          guardDriverName: this.driverName,
-        })
+        throw this.#authenticationFailed()
       }
       this.user = payload
     } catch (err) {
-      throw new errors.E_UNAUTHORIZED_ACCESS('Unauthorized access', {
-        guardDriverName: this.driverName,
-      })
+      throw this.#authenticationFailed()
     }
 
     // const providerUser = await this.#userProvider.findById(payload.sub!)
@@ -73,9 +72,12 @@ export class JwtGuard<UserProvider extends JwtUserProviderContract<unknown>>
     try {
       await this.authenticate()
       return true
-    } catch (e) {
-      logger.error(e)
-      return false
+    } catch (error) {
+      if (error instanceof errors.E_UNAUTHORIZED_ACCESS) {
+        return false
+      }
+
+      throw error
     }
   }
 

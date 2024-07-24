@@ -25,6 +25,17 @@ export type KeycloakConfig = {
   }
 }
 
+export interface KeycloakResponseToken {
+  'access_token': string
+  'expires_in': number
+  'refresh_expires_in': number
+  'refresh_token': string
+  'token_type': string
+  'not-before-policy': number
+  'session_state': string
+  'scope': string
+}
+
 export default class KeycloakService {
   private publicCert?: string
 
@@ -50,5 +61,28 @@ export default class KeycloakService {
     this.publicCert = rs256key[0].x5c[0]
 
     return this.publicCert
+  }
+
+  async createAccessToken(username: string, password: string): Promise<string> {
+    var urlencoded = new URLSearchParams()
+    urlencoded.append('grant_type', 'password')
+    urlencoded.append('client_id', keycloakConfig.clientId!)
+    urlencoded.append('client_secret', keycloakConfig.clientSecret!)
+    urlencoded.append('username', username)
+    urlencoded.append('password', password)
+
+    var requestOptions = {
+      method: 'POST',
+      body: urlencoded,
+    }
+
+    const response = await fetch(
+      `${keycloakConfig.url}/realms/${keycloakConfig.realm}/protocol/openid-connect/token`,
+      requestOptions
+    )
+
+    const data: KeycloakResponseToken = (await response.json()) as KeycloakResponseToken
+
+    return data.access_token
   }
 }
