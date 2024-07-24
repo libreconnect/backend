@@ -3,8 +3,8 @@ import { keycloakUsers } from '#config/app'
 import app from '@adonisjs/core/services/app'
 import { test } from '@japa/runner'
 
-test.group('Patients list', () => {
-  test('should return a 403 error when a patient user accesses /v1/patients', async ({
+test.group('Heart Rates List', () => {
+  test('should handle non-existing patient when retrieving heart rates', async ({
     assert,
     client,
   }) => {
@@ -14,14 +14,22 @@ test.group('Patients list', () => {
       keycloakUsers.PROFESSIONNEL.username,
       keycloakUsers.PROFESSIONNEL.password
     )
-
     const response = await client
-      .get('/v1/patients')
+      .get('/v1/heart/rates/000000')
       .header('Authorization', `Bearer ${accessToken}`)
 
-    response.assertStatus(403)
+    response.assertStatus(404)
+    assert.properties(response.body(), ['code', 'message', 'status'])
+
+    assert.equal(response.body().code, 'E_PATIENT_NOT_FOUND')
+  }).tags(['heart'])
+
+  test('should return a 401 error if the user is not logged in', async ({ client, assert }) => {
+    const response = await client.get('/v1/heart/rates/000000')
+
+    response.assertStatus(401)
 
     assert.properties(response.body(), ['code', 'message', 'status'])
-    assert.equal(response.body().code, 'E_PATIENT_FETCH_UNAUTHORIZED')
-  })
+    assert.equal(response.body().code, 'E_AUTHENTICATION_UNAUTHORIZED')
+  }).tags(['heart'])
 })
