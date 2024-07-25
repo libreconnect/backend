@@ -1,4 +1,3 @@
-import { Authenticators } from '@adonisjs/auth/types'
 import type { HttpContext } from '@adonisjs/core/http'
 import type { NextFn } from '@adonisjs/core/types/http'
 
@@ -22,4 +21,9 @@ export default class AuthMiddleware {
     await ctx.auth.authenticateUsing(options.guards, { loginRoute: this.redirectTo })
     return next()
   }
+}
+
+interface Authenticators {
+  api: 'api',
+  jwt: 'jwt'
 }
