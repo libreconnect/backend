@@ -24,3 +24,10 @@ export type JWTPayload = {
   'email': string
   [key: string]: any
 }
+
+
+declare module '@japa/api-client' {
+  interface ApiRequest {
+    loginAs(user: any): this
+  }
+}

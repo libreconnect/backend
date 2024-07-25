@@ -32,12 +32,10 @@ export class JwtGuard<UserProvider extends JwtUserProviderContract<unknown>>
 {
   #ctx: HttpContext
   #keycloakService: KeycloakService
-  #userProvider: UserProvider
 
-  constructor(ctx: HttpContext, keycloakService: KeycloakService, userProvider: UserProvider) {
+  constructor(ctx: HttpContext, keycloakService: KeycloakService) {
     this.#ctx = ctx
     this.#keycloakService = keycloakService
-    this.#userProvider = userProvider
   }
 
   declare [symbols.GUARD_KNOWN_EVENTS]: {}
@@ -102,19 +100,23 @@ export class JwtGuard<UserProvider extends JwtUserProviderContract<unknown>>
     }
   }
 
+  async generate(
+    user: UserProvider[typeof symbols.PROVIDER_REAL_USER],
+  ) {
+    return {
+      scope: 'profile email',
+      sub: (user as any).oidcId,
+      name: 'Nathael',
+      preferred_username: 'nathael',
+      given_name: 'Nathael',
+      family_name: 'Sante',
+    }
+  }
+
   async authenticateAsClient(
     user: UserProvider[typeof symbols.PROVIDER_REAL_USER]
   ): Promise<AuthClientResponse> {
-    const oidcId = (user as any).oidcId
-    const payload = {
-      scope: 'profile email',
-      sub: oidcId,
-      name: 'Nathalos Sante',
-      preferred_username: 'nathalos',
-      given_name: 'Nathalos',
-      family_name: 'Sante',
-      email: 'nathalos@sante.fr',
-    }
+    const payload = await this.generate(user)
 
     const token = jwt.sign(payload, 'secret', { expiresIn: '1h' })
 

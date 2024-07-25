@@ -15,7 +15,7 @@ const authConfig = defineConfig({
       provider: userProvider,
     }),
     jwt: (ctx) => {
-      return new JwtGuard(ctx, new KeycloakService(), userProvider)
+      return new JwtGuard(ctx, new KeycloakService())
     },
   },
 })
