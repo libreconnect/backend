@@ -1,16 +1,30 @@
 import { AuthClientResponse, GuardContract } from '@adonisjs/auth/types'
 import { symbols, errors } from '@adonisjs/auth'
 import { HttpContext } from '@adonisjs/core/http'
-export type JwtGuardUser<RealUser> = {
-  getId(): string
-  getOriginal(): RealUser
-}
 import jwt from 'jsonwebtoken'
 import KeycloakService from '#apps/authentication/services/keycloak_service'
 import * as authErrors from '#apps/authentication/errors'
+import logger from '@adonisjs/core/services/logger'
+import env from '#start/env'
+
+
+export type JwtGuardUser<RealUser> = {
+  /**
+   * Returns the unique ID of the user
+   */
+  getId(): string | number | BigInt
+
+  /**
+   * Returns the original user object
+   */
+  getOriginal(): RealUser
+}
 
 export interface JwtUserProviderContract<RealUser> {
   [symbols.PROVIDER_REAL_USER]: RealUser
+
+  createUserForGuard(user: RealUser): Promise<JwtGuardUser<RealUser>>
+  findById(identifier: string | number | BigInt): Promise<JwtGuardUser<RealUser> | null>
 }
 
 export class JwtGuard<UserProvider extends JwtUserProviderContract<unknown>>
@@ -18,10 +32,12 @@ export class JwtGuard<UserProvider extends JwtUserProviderContract<unknown>>
 {
   #ctx: HttpContext
   #keycloakService: KeycloakService
+  #userProvider: UserProvider
 
-  constructor(ctx: HttpContext, keycloakService: KeycloakService) {
+  constructor(ctx: HttpContext, keycloakService: KeycloakService, userProvider: UserProvider) {
     this.#ctx = ctx
     this.#keycloakService = keycloakService
+    this.#userProvider = userProvider
   }
 
   declare [symbols.GUARD_KNOWN_EVENTS]: {}
@@ -43,10 +59,22 @@ export class JwtGuard<UserProvider extends JwtUserProviderContract<unknown>>
       throw this.#authenticationFailed()
     }
 
+    logger.info(`Environnement: ${env.get('NODE_ENV')}`)
+
     const [, token] = authHeader.split('Bearer ')
     if (!token) {
       throw this.#authenticationFailed()
     }
+
+    if (env.get('NODE_ENV') === 'test') {
+      const payload = jwt.decode(token)
+      if (!payload) {
+        throw this.#authenticationFailed()
+      }
+      this.user = payload as UserProvider[typeof symbols.PROVIDER_REAL_USER]
+      return
+    }
+
     const key = await this.#keycloakService.getPublicCert()
     const publicKey = `-----BEGIN CERTIFICATE-----\n${key}\n-----END CERTIFICATE-----`
 
@@ -59,13 +87,6 @@ export class JwtGuard<UserProvider extends JwtUserProviderContract<unknown>>
     } catch (err) {
       throw this.#authenticationFailed()
     }
-
-    // const providerUser = await this.#userProvider.findById(payload.sub!)
-    // if (!providerUser) {
-    //   throw new errors.E_UNAUTHORIZED_ACCESS('Unauthorized access', {
-    //     guardDriverName: this.driverName,
-    //   })
-    // }
   }
 
   async check(): Promise<boolean> {
@@ -81,10 +102,26 @@ export class JwtGuard<UserProvider extends JwtUserProviderContract<unknown>>
     }
   }
 
-  async authenticateAsClient(): Promise<AuthClientResponse> {
+  async authenticateAsClient(
+    user: UserProvider[typeof symbols.PROVIDER_REAL_USER]
+  ): Promise<AuthClientResponse> {
+    const oidcId = (user as any).oidcId
+    const payload = {
+      scope: 'profile email',
+      sub: oidcId,
+      name: 'Nathalos Sante',
+      preferred_username: 'nathalos',
+      given_name: 'Nathalos',
+      family_name: 'Sante',
+      email: 'nathalos@sante.fr',
+    }
+
+    const token = jwt.sign(payload, 'secret', { expiresIn: '1h' })
+
+    this.user = payload
     return {
       headers: {
-        authorization: ``,
+        Authorization: `Bearer ${token}`,
       },
     }
   }

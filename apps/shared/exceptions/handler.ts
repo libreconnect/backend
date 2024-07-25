@@ -17,8 +17,6 @@ export default class HttpExceptionHandler extends ExceptionHandler {
    * response to the client
    */
   async handle(error: unknown, ctx: HttpContext) {
-    console.log('error', error)
-
     if (error instanceof errors.E_ROUTE_NOT_FOUND) {
       ctx.response.status(404).send({
         message: error.message,
@@ -60,6 +58,8 @@ export default class HttpExceptionHandler extends ExceptionHandler {
    * @note You should not attempt to send a response from this method.
    */
   async report(error: unknown, ctx: HttpContext) {
+    console.log(error)
+
     return super.report(error, ctx)
   }
 }

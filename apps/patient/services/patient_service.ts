@@ -5,7 +5,6 @@ import logger from '@adonisjs/core/services/logger'
 import { DateTime } from 'luxon'
 import { inject } from '@adonisjs/core'
 import ProfessionnalService from '#apps/professionnal/services/professionnal_service'
-import * as patientErrors from '#apps/patient/errors'
 
 @inject()
 export default class PatientService {
@@ -16,7 +15,10 @@ export default class PatientService {
       await this.professionnalService.findByOidcId(professionnalOidcId)
       return Patient.query().paginate(page, limit)
     } catch (err) {
-      throw new patientErrors.E_PATIENT_FETCH_UNAUTHORIZED()
+      throw new PatientException('Cannot access', {
+        code: 'E_PATIENT_FETCH_UNAUTHORIZED',
+        status: 403,
+      })
     }
   }
 

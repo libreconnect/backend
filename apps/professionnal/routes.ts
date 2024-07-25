@@ -9,6 +9,7 @@ router
     router
       .group(() => {
         router.get('/', [ProfessionnalController, 'index'])
+        router.post('/', [ProfessionnalController, 'store'])
       })
       .prefix('/professionnals')
       .middleware(middleware.auth())

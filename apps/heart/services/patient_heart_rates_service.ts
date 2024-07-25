@@ -1,7 +1,8 @@
 import { CreateHeartSchema, HeartQuerySchema } from '#apps/heart/validators/heart'
 import logger from '@adonisjs/core/services/logger'
-import HeartException from '#apps/heart/exceptions/heart_exception'
 import HeartRate from '#apps/shared/models/heart_rate'
+import { DateTime } from 'luxon'
+import HeartException from '../exceptions/heart_exception.js'
 
 export default class PatientHeartRatesService {
   async findByPatientId(
@@ -27,10 +28,18 @@ export default class PatientHeartRatesService {
       .paginate(page, limit)
   }
 
-  async create(_payload: CreateHeartSchema) {
+  async create(payload: CreateHeartSchema) {
     try {
-      //const startDate = DateTime.fromISO(payload.startDate)
-      //return HeartRate.create(payload)
+      const startDate = DateTime.fromISO(payload.startDate)
+
+      return HeartRate.create({
+        patientId: payload.patientId,
+        value: payload.value,
+        startDate: startDate.toMillis(),
+        endDate: payload.endDate
+          ? DateTime.fromISO(payload.endDate).toMillis()
+          : startDate.toMillis(),
+      })
     } catch (err) {
       logger.error(err)
       throw new HeartException('Failed to create heart rate data', {

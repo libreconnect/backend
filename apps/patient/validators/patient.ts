@@ -29,6 +29,7 @@ export const patientsQueryValidator = vine.compile(
   vine.object({
     page: vine.number().optional(),
     limit: vine.number().optional(),
+    company: vine.string().optional(),
   })
 )
 
