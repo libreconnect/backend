@@ -8,10 +8,9 @@ import { Infer } from '@vinejs/vine/types'
 export const createHeartValidator = vine.compile(
   vine.object({
     patientId: vine.string(),
-    startDate: vine.date().optional(),
-    endDate: vine.date().optional(),
-    minHeartRate: vine.number(),
-    maxHeartRate: vine.number(),
+    startDate: vine.string(),
+    endDate: vine.string().optional(),
+    value: vine.number(),
   })
 )
 

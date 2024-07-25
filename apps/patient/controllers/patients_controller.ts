@@ -18,9 +18,10 @@ export default class PatientsController {
    * @paramQuery limit - Number of items per page - @type(number)
    */
   async index({ request, auth }: HttpContext) {
-    const { page, limit } = await request.validateUsing(patientsQueryValidator)
+    const data = await request.validateUsing(patientsQueryValidator)
     const user = auth.user as JWTPayload
-    return this.patientService.findAll({ page, limit }, user.sub)
+
+    return this.patientService.findAll(data, user.sub)
   }
 
   /**

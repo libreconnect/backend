@@ -41,11 +41,11 @@ export const http = defineConfig({
 
 export const keycloakUsers = {
   PROFESSIONNEL: {
-    username: env.get('KEYCLOAK_USER_USERNAME') ?? 'professionnel',
-    password: env.get('KEYCLOAK_USER_PASSWORD') ?? 'professionnel',
+    username: env.get('KEYCLOAK_USER_PRO_USERNAME') ?? 'professionnel',
+    password: env.get('KEYCLOAK_USER_PRO_PASSWORD') ?? 'professionnel',
   },
   PATIENT: {
-    username: env.get('KEYCLOAK_USER_USERNAME') ?? 'patient',
-    password: env.get('KEYCLOAK_USER_PASSWORD') ?? 'patient',
+    username: env.get('KEYCLOAK_USER_PATIENT_USERNAME') ?? 'patient',
+    password: env.get('KEYCLOAK_USER_PATIENT_PASSWORD') ?? 'patient',
   },
 }

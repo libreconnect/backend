@@ -15,7 +15,7 @@ export default class Professionnal extends BaseModel {
   declare oidcId: string
 
   @column()
-  declare specialty: string
+  declare speciality: string
 
   @column()
   declare licenceNumber: string
