@@ -8,6 +8,7 @@ export default class extends BaseSchema {
       table.string('id').primary()
       table.string('name').notNullable()
       table.string('oidc_id').unique().notNullable().index('oidc_id_professionnal_index')
+      table.string('speciality').notNullable()
       table.string('licence_number').notNullable().unique()
       table
         .string('company_id')
