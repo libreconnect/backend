@@ -1,18 +1,15 @@
 import Patient from '#apps/shared/models/patient'
 import { test } from '@japa/runner'
-import Professionnal from '#models/professionnal'
+import Professional from '#models/professional'
 
-test.group('Patients list', () => {
+test.group('Patients - List', () => {
   test('should return a 403 error when a patient user accesses /v1/patients', async ({
     assert,
     client,
   }) => {
     const patient = await Patient.firstOrFail()
 
-
-    const response = await client
-      .get('/v1/patients')
-      .loginAs(patient)
+    const response = await client.get('/v1/patients').loginAs(patient)
 
     response.assertStatus(403)
 
@@ -24,11 +21,9 @@ test.group('Patients list', () => {
     client,
     assert,
   }) => {
-    const professional = await Professionnal.firstOrFail()
+    const professional = await Professional.firstOrFail()
 
-    const response = await client
-      .get('/v1/patients')
-      .loginAs(professional)
+    const response = await client.get('/v1/patients').loginAs(professional)
     response.assertStatus(200)
     assert.properties(response.body(), ['data', 'meta'])
   }).tags(['patients'])

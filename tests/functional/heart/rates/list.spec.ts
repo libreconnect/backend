@@ -1,22 +1,13 @@
-import KeycloakService from '#apps/authentication/services/keycloak_service'
-import { keycloakUsers } from '#config/app'
-import app from '@adonisjs/core/services/app'
 import { test } from '@japa/runner'
+import Professional from '#models/professional'
 
-test.group('Heart Rates List', () => {
+test.group('Heart Rates - List', () => {
   test('should handle non-existing patient when retrieving heart rates', async ({
     assert,
     client,
   }) => {
-    const keycloakService = await app.container.make(KeycloakService)
-
-    const accessToken = await keycloakService.createAccessToken(
-      keycloakUsers.PROFESSIONNEL.username,
-      keycloakUsers.PROFESSIONNEL.password
-    )
-    const response = await client
-      .get('/v1/heart/rates/000000')
-      .header('Authorization', `Bearer ${accessToken}`)
+    const professional = await Professional.firstOrFail()
+    const response = await client.get('/v1/heart/rates/000000').loginAs(professional)
 
     response.assertStatus(404)
     assert.properties(response.body(), ['code', 'message', 'status'])
@@ -25,7 +16,7 @@ test.group('Heart Rates List', () => {
   }).tags(['heart'])
 
   test('should return a 401 error if the user is not logged in', async ({ client, assert }) => {
-    const response = await client.get('/v1/heart/rates/000000')
+    const response = await client.get('/v1/heart/rates/null')
 
     response.assertStatus(401)
 
