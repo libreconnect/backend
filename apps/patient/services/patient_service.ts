@@ -4,7 +4,7 @@ import { CreatePatientSchema, PatientsQuerySchema } from '#apps/patient/validato
 import logger from '@adonisjs/core/services/logger'
 import { DateTime } from 'luxon'
 import { inject } from '@adonisjs/core'
-import ProfessionnalService from '#apps/professionnal/services/professionnal_service'
+import ProfessionnalService from '#apps/professional/services/professional_service'
 
 @inject()
 export default class PatientService {

@@ -4,6 +4,8 @@ import PatientHeartRatesService from '#apps/heart/services/patient_heart_rates_s
 import logger from '@adonisjs/core/services/logger'
 import { createHeartValidator, heartQueryValidator } from '#apps/heart/validators/heart'
 import PatientService from '#apps/patient/services/patient_service'
+import { JWTPayload } from '#apps/authentication/contracts/jwt'
+import PatientHeartRatesPolicy from '#apps/heart/policies/patient_heart_rates_policy'
 
 @inject()
 export default class PatientHeartRatesController {
@@ -39,9 +41,12 @@ export default class PatientHeartRatesController {
    * @responseBody 401 - Unauthorized
    * @requestBody <createHeartValidator>
    */
-  async store({ request }: HttpContext) {
+  async store({ request, response, auth, bouncer }: HttpContext) {
     const data = await request.validateUsing(createHeartValidator)
+    const user = auth.user as JWTPayload
+    const patient = await this.patientService.findByOidcId(user.sub)
+    await bouncer.with(PatientHeartRatesPolicy).authorize('create', patient, data.patientId)
 
-    return this.patientHeartRatesService.create(data)
+    return response.created(await this.patientHeartRatesService.create(data))
   }
 }
