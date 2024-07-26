@@ -1,5 +1,5 @@
 import PatientService from '#apps/patient/services/patient_service'
-import ProfessionnalService from '#apps/professionnal/services/professionnal_service'
+import ProfessionnalService from '#apps/professional/services/professional_service'
 import { inject } from '@adonisjs/core'
 
 @inject()

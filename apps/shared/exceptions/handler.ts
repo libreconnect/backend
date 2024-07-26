@@ -4,6 +4,8 @@ import { errors } from '@adonisjs/core'
 import { errors as authErrors } from '@adonisjs/auth'
 import { errors as lucidErrors } from '@adonisjs/lucid'
 import * as patientErrors from '#apps/patient/errors'
+import * as authenticationErrors from '#apps/authentication/errors'
+import { errors as bouncerErrors } from '@adonisjs/bouncer'
 
 export default class HttpExceptionHandler extends ExceptionHandler {
   /**
@@ -17,6 +19,13 @@ export default class HttpExceptionHandler extends ExceptionHandler {
    * response to the client
    */
   async handle(error: unknown, ctx: HttpContext) {
+    if (error instanceof bouncerErrors.E_AUTHORIZATION_FAILURE) {
+      return ctx.response.status(error.status).send({
+        message: error.message,
+        status: error.status,
+        code: error.response.message,
+      })
+    }
     if (error instanceof errors.E_ROUTE_NOT_FOUND) {
       ctx.response.status(404).send({
         message: error.message,
@@ -48,6 +57,33 @@ export default class HttpExceptionHandler extends ExceptionHandler {
       return
     }
 
+    if (error instanceof authenticationErrors.E_AUTHENTICATION_UNAUTHORIZED) {
+      ctx.response.status(401).send({
+        message: error.message,
+        status: error.status,
+        code: error.code,
+      })
+      return
+    }
+
+    if (error instanceof patientErrors.E_PATIENT_NOT_FOUND) {
+      ctx.response.status(404).send({
+        message: error.message,
+        status: error.status,
+        code: error.code,
+      })
+      return
+    }
+
+    if (error instanceof patientErrors.E_PATIENT_FETCH_UNAUTHORIZED) {
+      ctx.response.status(403).send({
+        message: error.message,
+        status: error.status,
+        code: error.code,
+      })
+      return
+    }
+
     return super.handle(error, ctx)
   }
 
@@ -58,8 +94,6 @@ export default class HttpExceptionHandler extends ExceptionHandler {
    * @note You should not attempt to send a response from this method.
    */
   async report(error: unknown, ctx: HttpContext) {
-    console.log(error)
-
     return super.report(error, ctx)
   }
 }

@@ -4,9 +4,7 @@ import { HttpContext } from '@adonisjs/core/http'
 import jwt from 'jsonwebtoken'
 import KeycloakService from '#apps/authentication/services/keycloak_service'
 import * as authErrors from '#apps/authentication/errors'
-import logger from '@adonisjs/core/services/logger'
 import env from '#start/env'
-
 
 export type JwtGuardUser<RealUser> = {
   /**
@@ -57,8 +55,6 @@ export class JwtGuard<UserProvider extends JwtUserProviderContract<unknown>>
       throw this.#authenticationFailed()
     }
 
-    logger.info(`Environnement: ${env.get('NODE_ENV')}`)
-
     const [, token] = authHeader.split('Bearer ')
     if (!token) {
       throw this.#authenticationFailed()
@@ -100,9 +96,7 @@ export class JwtGuard<UserProvider extends JwtUserProviderContract<unknown>>
     }
   }
 
-  async generate(
-    user: UserProvider[typeof symbols.PROVIDER_REAL_USER],
-  ) {
+  async generate(user: UserProvider[typeof symbols.PROVIDER_REAL_USER]) {
     return {
       scope: 'profile email',
       sub: (user as any).oidcId,

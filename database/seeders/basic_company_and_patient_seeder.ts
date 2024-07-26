@@ -1,6 +1,6 @@
 import Company from '#apps/shared/models/company'
 import Patient from '#apps/shared/models/patient'
-import Professionnal from '#apps/shared/models/professionnal'
+import Professional from '#models/professional'
 import { BaseSeeder } from '@adonisjs/lucid/seeders'
 import { DateTime } from 'luxon'
 
@@ -48,7 +48,7 @@ export default class extends BaseSeeder {
       }
     )
 
-    await Professionnal.firstOrCreate(
+    await Professional.firstOrCreate(
       {
         oidcId: '77a1e767-a964-4df4-bda8-28529c243441',
       },

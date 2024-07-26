@@ -4,7 +4,7 @@ import { DateTime } from 'luxon'
 import Company from '#apps/shared/models/company'
 import type { BelongsTo } from '@adonisjs/lucid/types/relations'
 
-export default class Professionnal extends BaseModel {
+export default class Professional extends BaseModel {
   @column({ isPrimary: true })
   declare id: string
 
@@ -33,7 +33,7 @@ export default class Professionnal extends BaseModel {
   declare updatedAt: DateTime | null
 
   @beforeCreate()
-  static async generateUuid(model: Professionnal) {
+  static async generateUuid(model: Professional) {
     model.id = generateSnowflake()
   }
 }
