@@ -1,7 +1,8 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
 import CompanyService from '#apps/companies/services/company_service'
-import { createCompanyValidator, getComaniesValidator } from '../validators/company.js'
+import { createCompanyValidator, getComaniesValidator } from '#apps/companies/validators/company'
+import CompanyPolicy from '#apps/companies/policies/company_policy'
 
 @inject()
 export default class CompaniesController {
@@ -22,7 +23,8 @@ export default class CompaniesController {
     return this.companyService.findAll(data)
   }
 
-  async create({ request }: HttpContext) {
+  async create({ request, bouncer }: HttpContext) {
+    await bouncer.with(CompanyPolicy).authorize('store')
     const data = await request.validateUsing(createCompanyValidator)
 
     return this.companyService.create(data)
