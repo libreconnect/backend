@@ -10,7 +10,7 @@ export type JWTPayload = {
   'session_state': string
   'acr': string
   'allowed-origins': string[]
-  'realm_acces': {
+  'realm_access': {
     roles: string[]
   }
   'resource_access': { [key: string]: { roles: string[] } }
@@ -25,9 +25,8 @@ export type JWTPayload = {
   [key: string]: any
 }
 
-
 declare module '@japa/api-client' {
   interface ApiRequest {
-    loginAs(user: any): this
+    loginAs(user: any, realmRoles: string[]): this
   }
 }
