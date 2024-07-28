@@ -96,7 +96,7 @@ export class JwtGuard<UserProvider extends JwtUserProviderContract<unknown>>
     }
   }
 
-  async generate(user: UserProvider[typeof symbols.PROVIDER_REAL_USER]) {
+  async generate(user: UserProvider[typeof symbols.PROVIDER_REAL_USER], roles: string[]) {
     return {
       scope: 'profile email',
       sub: (user as any).oidcId,
@@ -104,13 +104,17 @@ export class JwtGuard<UserProvider extends JwtUserProviderContract<unknown>>
       preferred_username: 'nathael',
       given_name: 'Nathael',
       family_name: 'Sante',
+      realm_access: {
+        roles: [...roles],
+      },
     }
   }
 
   async authenticateAsClient(
-    user: UserProvider[typeof symbols.PROVIDER_REAL_USER]
+    user: UserProvider[typeof symbols.PROVIDER_REAL_USER],
+    realmRoles: string[]
   ): Promise<AuthClientResponse> {
-    const payload = await this.generate(user)
+    const payload = await this.generate(user, realmRoles)
 
     const token = jwt.sign(payload, 'secret', { expiresIn: '1h' })
 
@@ -130,5 +134,9 @@ export class JwtGuard<UserProvider extends JwtUserProviderContract<unknown>>
     }
 
     return this.user
+  }
+
+  async test(): Promise<this> {
+    return this
   }
 }
