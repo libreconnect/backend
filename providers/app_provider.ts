@@ -1,4 +1,6 @@
 import type { ApplicationService } from '@adonisjs/core/types'
+import RabbitManager from '#apps/shared/services/rabbit/rabbit'
+import rabbitConfig from '#config/rabbit'
 
 export default class AppProvider {
   constructor(protected app: ApplicationService) {}
@@ -6,7 +8,11 @@ export default class AppProvider {
   /**
    * Register bindings to the container
    */
-  register() {}
+  register() {
+    this.app.container.singleton('rabbit', () => {
+      return new RabbitManager(rabbitConfig)
+    })
+  }
 
   /**
    * The container bindings have booted
