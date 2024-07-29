@@ -7,7 +7,7 @@ test.group('Heart Rates - List', () => {
     client,
   }) => {
     const professional = await Professional.firstOrFail()
-    const response = await client.get('/v1/heart/rates/000000').loginAs(professional)
+    const response = await client.get('/v1/heart/rates/000000').loginAs(professional, [])
 
     response.assertStatus(404)
     assert.properties(response.body(), ['code', 'message', 'status'])
