@@ -23,10 +23,11 @@ export default class CompaniesController {
     return this.companyService.findAll(data)
   }
 
-  async create({ request, bouncer }: HttpContext) {
+  async create({ request, bouncer, response }: HttpContext) {
     await bouncer.with(CompanyPolicy).authorize('store')
     const data = await request.validateUsing(createCompanyValidator)
 
-    return this.companyService.create(data)
+    const company = await this.companyService.create(data)
+    return response.created(company)
   }
 }
