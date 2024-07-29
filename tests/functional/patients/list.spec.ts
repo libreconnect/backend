@@ -9,7 +9,7 @@ test.group('Patients - List', () => {
   }) => {
     const patient = await Patient.firstOrFail()
 
-    const response = await client.get('/v1/patients').loginAs(patient)
+    const response = await client.get('/v1/patients').loginAs(patient, [])
 
     response.assertStatus(403)
 
@@ -23,7 +23,7 @@ test.group('Patients - List', () => {
   }) => {
     const professional = await Professional.firstOrFail()
 
-    const response = await client.get('/v1/patients').loginAs(professional)
+    const response = await client.get('/v1/patients').loginAs(professional, [])
     response.assertStatus(200)
     assert.properties(response.body(), ['data', 'meta'])
   }).tags(['patients'])

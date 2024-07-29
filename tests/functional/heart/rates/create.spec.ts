@@ -24,7 +24,7 @@ test.group('Heart Rates - Create', () => {
         startDate: '2024-05-05',
         value: 100,
       })
-      .loginAs(patient)
+      .loginAs(patient, [])
 
     response.assertStatus(201)
     assert.properties(response.body(), [
@@ -51,7 +51,7 @@ test.group('Heart Rates - Create', () => {
         startDate: '2024-05-05',
         value: 100,
       })
-      .loginAs(patient)
+      .loginAs(patient, [])
 
     response.assertStatus(403)
     assert.properties(response.body(), ['message', 'status', 'code'])
