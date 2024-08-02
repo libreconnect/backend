@@ -34,6 +34,8 @@ export default class Professional extends BaseModel {
 
   @beforeCreate()
   static async generateUuid(model: Professional) {
-    model.id = generateSnowflake()
+    if (!model.id) {
+      model.id = generateSnowflake()
+    }
   }
 }

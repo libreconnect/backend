@@ -6,11 +6,12 @@ import { DateTime } from 'luxon'
 
 export default class extends BaseSeeder {
   async run() {
-    const company = await Company.firstOrCreate(
+    await Company.firstOrCreate(
       {
         nationalCode: '340785161',
       },
       {
+        id: '5836049162517872642997799',
         address: '371 Avenue Du Doyen Gaston Giraud',
         city: 'Montpellier',
         country: 'France',
@@ -27,6 +28,7 @@ export default class extends BaseSeeder {
         nationalCode: '340796663',
       },
       {
+        id: '9336049162517872642997616',
         address: '371 Avenue Du Doyen Gaston Giraud',
         city: 'Montpellier',
         country: 'France',
@@ -54,7 +56,7 @@ export default class extends BaseSeeder {
       },
       {
         name: 'Nathalos',
-        companyId: company.id,
+        companyId: '5836049162517872642997799',
         licenceNumber: '3723719331',
         oidcId: '77a1e767-a964-4df4-bda8-28529c243441',
         speciality: 'diabetic',

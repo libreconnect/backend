@@ -2,7 +2,7 @@ import Professional from '#models/professional'
 import { BaseModel, beforeCreate, column, hasMany } from '@adonisjs/lucid/orm'
 import type { HasMany } from '@adonisjs/lucid/types/relations'
 import { DateTime } from 'luxon'
-import { randomUUID } from 'node:crypto'
+import { generateSnowflake } from '#apps/shared/services/snowflake_service'
 
 export default class Company extends BaseModel {
   @column({ isPrimary: true })
@@ -43,6 +43,8 @@ export default class Company extends BaseModel {
 
   @beforeCreate()
   static async generateUuid(model: Company) {
-    model.id = randomUUID()
+    if (!model.id) {
+      model.id = generateSnowflake()
+    }
   }
 }
