@@ -22,9 +22,7 @@ export const createCompanyValidator = vine.compile(
  * Validator to validate the payload when updating
  * an existing company.ts.
  */
-export const updateCompanyValidator = vine.compile(
-  vine.object({})
-)
+export const updateCompanyValidator = vine.compile(vine.object({}))
 
 export const getComaniesValidator = vine.compile(
   vine.object({

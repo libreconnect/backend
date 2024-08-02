@@ -24,6 +24,6 @@ export default class AuthMiddleware {
 }
 
 interface Authenticators {
-  api: 'api',
+  api: 'api'
   jwt: 'jwt'
 }

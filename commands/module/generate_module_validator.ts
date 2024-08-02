@@ -23,7 +23,7 @@ export default class GenerateModuleValidator extends BaseCommand {
       codemods.makeUsingStub(STUBS_ROOT.pathname, 'validator.stub', {
         name: this.name,
         module,
-        includeServiceInjection: false
+        includeServiceInjection: false,
       }),
     ])
   }
