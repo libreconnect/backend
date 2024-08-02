@@ -31,7 +31,8 @@
     "test": "node ace test",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "prepare": "husky"
   },
   "devDependencies": {
     "@adonisjs/assembler": "^7.7.0",
@@ -48,6 +49,7 @@
     "@types/node": "^20.14.12",
     "eslint": "^8.57.0",
     "hot-hook": "^0.2.6",
+    "husky": "^9.1.4",
     "pino-pretty": "^11.2.1",
     "prettier": "^3.3.3",
     "ts-node": "^10.9.2",
