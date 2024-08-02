@@ -11,6 +11,11 @@ export default class CompanyService {
       })
       .paginate(page, limit)
   }
+
+  async findById(id: string) {
+    return Company.query().where('id', id).first()
+  }
+
   async create(payload: CreateCompaniesSchema): Promise<Company> {
     try {
       const company = await Company.create(payload)
