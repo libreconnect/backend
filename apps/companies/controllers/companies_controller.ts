@@ -17,10 +17,16 @@ export default class CompaniesController {
    * @responseHeader 200 - @use(paginated)
    * @responseHeader 200 - X-pages - A description of the header - @example(test)
    */
-  async index({ request }: HttpContext) {
+  async index({ request, bouncer }: HttpContext) {
+    await bouncer.with(CompanyPolicy).authorize('view')
     const data = await request.validateUsing(getComaniesValidator)
 
     return this.companyService.findAll(data)
+  }
+
+  async show({ params, bouncer }: HttpContext) {
+    await bouncer.with(CompanyPolicy).allows('show' as never, params.id)
+    return this.companyService.findById(params.id)
   }
 
   async create({ request, bouncer, response }: HttpContext) {
