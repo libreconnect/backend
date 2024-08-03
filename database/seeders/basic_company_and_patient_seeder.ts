@@ -42,11 +42,26 @@ export default class extends BaseSeeder {
     await Patient.firstOrCreate(
       {
         oidcId: 'df6813f5-1585-40da-af91-194c1b89c979',
+        id: '9498994932837253124945211',
       },
       {
+        id: '9498994932837253124945211',
         name: 'Nathael',
         oidcId: 'df6813f5-1585-40da-af91-194c1b89c979',
         dateOfBirth: DateTime.fromISO('2003-07-05'),
+      }
+    )
+
+    await Patient.firstOrCreate(
+      {
+        oidcId: 'f875c155-9607-4aa3-af4e-59b3bff848ff',
+        id: '7225613526272839680',
+      },
+      {
+        id: '7225613526272839680',
+        name: 'Patient test[1]',
+        oidcId: 'f875c155-9607-4aa3-af4e-59b3bff848ff',
+        dateOfBirth: DateTime.fromISO('2004-10-23'),
       }
     )
 
