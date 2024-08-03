@@ -33,10 +33,4 @@ export default await Env.create(new URL('../', import.meta.url), {
   KEYCLOAK_REALM: Env.schema.string(),
   KEYCLOAK_CLIENT_ID: Env.schema.string(),
   KEYCLOAK_CLIENT_SECRET: Env.schema.string(),
-
-  KEYCLOAK_USER_PRO_USERNAME: Env.schema.string.optional(),
-  KEYCLOAK_USER_PRO_PASSWORD: Env.schema.string.optional(),
-
-  KEYCLOAK_USER_PATIENT_USERNAME: Env.schema.string.optional(),
-  KEYCLOAK_USER_PATIENT_PASSWORD: Env.schema.string.optional(),
 })

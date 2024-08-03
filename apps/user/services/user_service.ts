@@ -6,7 +6,7 @@ import { inject } from '@adonisjs/core'
 export default class UserService {
   constructor(
     protected patientService: PatientService,
-    protected professionnalService: ProfessionnalService
+    protected professionalService: ProfessionnalService
   ) {}
 
   async status(oidcId: string) {
@@ -19,11 +19,11 @@ export default class UserService {
         }
       }
 
-      const professionnal = await this.professionnalService.findByOidcId(oidcId)
-      if (professionnal) {
+      const professional = await this.professionalService.findByOidcId(oidcId)
+      if (professional) {
         return {
-          type: 'professionnal',
-          professionnal,
+          type: 'professional',
+          professional,
         }
       }
     } catch (err) {

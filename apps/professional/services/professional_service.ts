@@ -4,7 +4,7 @@ import { CreateProfessionalSchema } from '#apps/professional/validators/professi
 
 export default class ProfessionalService {
   async findByOidcId(oidcId: string) {
-    const professional = await Professional.query().where('oidc_id', oidcId).firstOrFail()
+    const professional = await Professional.query().where('oidc_id', oidcId).first()
 
     if (!professional) {
       throw new ProfessionalException('Professional not found', {

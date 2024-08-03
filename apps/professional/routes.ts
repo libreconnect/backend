@@ -9,6 +9,7 @@ router
     router
       .group(() => {
         router.get('/', [ProfessionalController, 'index'])
+        router.get('/status', [ProfessionalController, 'status'])
         router.post('/', [ProfessionalController, 'store'])
       })
       .prefix('/professionals')
