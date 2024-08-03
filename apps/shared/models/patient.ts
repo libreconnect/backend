@@ -24,7 +24,9 @@ export default class Patient extends BaseModel {
 
   @beforeCreate()
   static async generateUuid(model: Patient) {
-    model.id = generateSnowflake()
+    if (!model.id) {
+      model.id = generateSnowflake()
+    }
   }
 
   static accessTokens = DbAccessTokensProvider.forModel(Patient, {
