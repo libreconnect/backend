@@ -66,6 +66,10 @@ jobs:
     needs: [lint, test]
     steps:
       - uses: actions/checkout@v4
+        with:
+          repository: libreconnect/backend
+          ref: main
+          token: ${{ secrets.PAT }}
       - name: Update helmfile develop
         run: |
           VERSION=$(git rev-parse --short HEAD)
@@ -82,7 +86,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.PAT }}
   build-and-push:
-    needs: [lint, test]
+    needs: [lint, test, update-chart]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
