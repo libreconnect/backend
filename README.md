@@ -35,6 +35,11 @@ $ pnpm run dev
 | `DB_PORT`                | Database port                                 | `5432`                             |
 
 
+### Launch Tests
+
+```sh
+$ pnpm test
+```
 ## Documentation
 
 Checkout our [documentation api](https://api.libreconnect.bonnal.cloud/docs).
