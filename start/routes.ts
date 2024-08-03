@@ -11,6 +11,11 @@ import router from '@adonisjs/core/services/router'
 import { middleware } from './kernel.js'
 import AutoSwagger from 'adonis-autoswagger'
 import swagger from '#config/swagger'
+import rabbit from '#apps/shared/services/rabbit/main'
+
+const FooController = () => import('#apps/user/controllers/foo_controller')
+
+rabbit.consume('foo', [FooController, 'test'])
 
 router
   .get('/', async ({ auth }) => {
@@ -28,3 +33,5 @@ router.get('/swagger', async () => {
 router.get('/docs', async () => {
   return AutoSwagger.default.scalar('/swagger')
 })
+
+await rabbit.start()
