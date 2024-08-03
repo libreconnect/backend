@@ -3,6 +3,7 @@ import { inject } from '@adonisjs/core'
 import PatientService from '#apps/patient/services/patient_service'
 import { createPatientValidator, patientsQueryValidator } from '#apps/patient/validators/patient'
 import { JWTPayload } from '#apps/authentication/contracts/jwt'
+import PatientPolicy from '#apps/patient/policies/patient_policy'
 
 @inject()
 export default class PatientsController {
@@ -31,8 +32,10 @@ export default class PatientsController {
    * @responseBody 403 - Forbidden
    * @responseBody 401 - Unauthorized
    */
-  async show({ params }: HttpContext) {
-    return this.patientService.findById(params.id)
+  async show({ params, bouncer }: HttpContext) {
+    const patient = await this.patientService.findById(params.id)
+    await bouncer.with(PatientPolicy).authorize('show' as never, patient.oidcId)
+    return patient
   }
 
   /**
