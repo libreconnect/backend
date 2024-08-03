@@ -37,7 +37,7 @@ jobs:
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: api_test
+          POSTGRES_DB: libreconnect_api_test
         options: >-
           --health-cmd="pg_isready -U postgres"
           --health-interval=10s
