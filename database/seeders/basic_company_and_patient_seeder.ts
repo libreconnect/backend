@@ -41,25 +41,37 @@ export default class extends BaseSeeder {
 
     await Patient.firstOrCreate(
       {
-        oidcId: '9f6ca596-908e-4a53-a977-c2065cf98e44',
+        oidcId: 'df6813f5-1585-40da-af91-194c1b89c979',
       },
       {
         name: 'Nathael',
-        oidcId: '9f6ca596-908e-4a53-a977-c2065cf98e44',
+        oidcId: 'df6813f5-1585-40da-af91-194c1b89c979',
         dateOfBirth: DateTime.fromISO('2003-07-05'),
       }
     )
 
     await Professional.firstOrCreate(
       {
-        oidcId: '77a1e767-a964-4df4-bda8-28529c243441',
+        oidcId: 'b48b178d-1ed5-46b1-8379-9d9f80b3c75b',
       },
       {
-        name: 'Nathalos',
+        name: 'Jinane',
         companyId: '5836049162517872642997799',
         licenceNumber: '3723719331',
-        oidcId: '77a1e767-a964-4df4-bda8-28529c243441',
+        oidcId: 'b48b178d-1ed5-46b1-8379-9d9f80b3c75b',
         speciality: 'diabetic',
+      }
+    )
+
+    await Professional.firstOrCreate(
+      {
+        oidcId: 'c8d2fd2c-5c40-4e52-af58-134b7c8df323',
+      },
+      {
+        oidcId: 'c8d2fd2c-5c40-4e52-af58-134b7c8df323',
+        name: 'Medecin Test',
+        speciality: 'generalist',
+        licenceNumber: '123131313',
       }
     )
   }

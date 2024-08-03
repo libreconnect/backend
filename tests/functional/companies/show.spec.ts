@@ -12,7 +12,7 @@ test.group('Companies show', () => {
   }).tags(['companies'])
 
   test('should return 403 for patient', async ({ assert, client }) => {
-    const user = await Patient.findByOrFail('oidc_id', '9f6ca596-908e-4a53-a977-c2065cf98e44')
+    const user = await Patient.findByOrFail('oidc_id', 'df6813f5-1585-40da-af91-194c1b89c979')
     const response = await client.get('/v1/companies/5836049162517872642997799').loginAs(user, [])
 
     response.assertStatus(403)
@@ -21,7 +21,7 @@ test.group('Companies show', () => {
   }).tags(['companies'])
 
   test('should return 403 for unauthorized professional', async ({ client, assert }) => {
-    const user = await Professional.findByOrFail('oidc_id', '77a1e767-a964-4df4-bda8-28529c243441')
+    const user = await Professional.findByOrFail('oidc_id', 'b48b178d-1ed5-46b1-8379-9d9f80b3c75b')
 
     const response = await client.get('/v1/companies/9336049162517872642997616').loginAs(user, [])
 
@@ -31,7 +31,7 @@ test.group('Companies show', () => {
   }).tags(['companies'])
 
   test('should return 200 for authorized professional', async ({ client, assert }) => {
-    const user = await Professional.findByOrFail('oidc_id', '77a1e767-a964-4df4-bda8-28529c243441')
+    const user = await Professional.findByOrFail('oidc_id', 'b48b178d-1ed5-46b1-8379-9d9f80b3c75b')
 
     const response = await client.get('/v1/companies/5836049162517872642997799').loginAs(user, [])
 
