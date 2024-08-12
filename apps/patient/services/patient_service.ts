@@ -8,12 +8,12 @@ import ProfessionnalService from '#apps/professional/services/professional_servi
 
 @inject()
 export default class PatientService {
-  constructor(private professionnalService: ProfessionnalService) {}
+  constructor(private professionalService: ProfessionnalService) {}
 
-  async findAll({ page = 1, limit = 10 }: PatientsQuerySchema, professionnalOidcId: string) {
+  async findAll({ page = 1, limit = 10 }: PatientsQuerySchema, professionalOidcId: string) {
     try {
-      await this.professionnalService.findByOidcId(professionnalOidcId)
-      return Patient.query().paginate(page, limit)
+      await this.professionalService.findByOidcId(professionalOidcId)
+      return Patient.query().preload('companies').paginate(page, limit)
     } catch (err) {
       throw new PatientException('Cannot access', {
         code: 'E_PATIENT_FETCH_UNAUTHORIZED',
