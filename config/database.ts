@@ -3,9 +3,11 @@ import { defineConfig } from '@adonisjs/lucid'
 
 const dbConfig = defineConfig({
   connection: 'postgres',
+  prettyPrintDebugQueries: true,
   connections: {
     postgres: {
       client: 'pg',
+      debug: env.get('DB_LOGGING'),
       connection: {
         host: env.get('DB_HOST'),
         port: env.get('DB_PORT'),
