@@ -8,18 +8,10 @@
 */
 
 import router from '@adonisjs/core/services/router'
-import { middleware } from './kernel.js'
 import AutoSwagger from 'adonis-autoswagger'
 import swagger from '#config/swagger'
-
-router
-  .get('/', async ({ auth }) => {
-    return {
-      hello: 'world',
-      user: auth.user,
-    }
-  })
-  .middleware(middleware.auth())
+import emitter from '@adonisjs/core/services/emitter'
+import logger from '@adonisjs/core/services/logger'
 
 router.get('/swagger', async () => {
   return AutoSwagger.default.docs(router.toJSON(), swagger)
@@ -27,4 +19,8 @@ router.get('/swagger', async () => {
 
 router.get('/docs', async () => {
   return AutoSwagger.default.scalar('/swagger')
+})
+
+emitter.on('db:query', function (query) {
+  logger.debug(query)
 })
