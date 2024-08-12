@@ -55,6 +55,6 @@ test.group('Heart Rates - Create', () => {
 
     response.assertStatus(403)
     assert.properties(response.body(), ['message', 'status', 'code'])
-    assert.equal(response.body().code, 'E_HEART_CREATION_UNAUTHORIZED')
+    assert.equal(response.body().code, 'E_PATIENT_HEART_UNAUTHORIZED')
   })
 })
