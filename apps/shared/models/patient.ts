@@ -1,7 +1,9 @@
 import { generateSnowflake } from '#apps/shared/services/snowflake_service'
 import { DbAccessTokensProvider } from '@adonisjs/auth/access_tokens'
-import { BaseModel, beforeCreate, column } from '@adonisjs/lucid/orm'
+import { BaseModel, beforeCreate, column, manyToMany } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
+import Company from '#models/company'
+import type { ManyToMany } from '@adonisjs/lucid/types/relations'
 
 export default class Patient extends BaseModel {
   @column({ isPrimary: true })
@@ -15,6 +17,9 @@ export default class Patient extends BaseModel {
 
   @column()
   declare oidcId: string
+
+  @manyToMany(() => Company)
+  declare companies: ManyToMany<typeof Company>
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime

@@ -1,8 +1,9 @@
 import Professional from '#models/professional'
-import { BaseModel, beforeCreate, column, hasMany } from '@adonisjs/lucid/orm'
-import type { HasMany } from '@adonisjs/lucid/types/relations'
+import { BaseModel, beforeCreate, column, hasMany, manyToMany } from '@adonisjs/lucid/orm'
+import type { HasMany, ManyToMany } from '@adonisjs/lucid/types/relations'
 import { DateTime } from 'luxon'
 import { generateSnowflake } from '#apps/shared/services/snowflake_service'
+import Patient from '#models/patient'
 
 export default class Company extends BaseModel {
   @column({ isPrimary: true })
@@ -34,6 +35,9 @@ export default class Company extends BaseModel {
 
   @hasMany(() => Professional)
   declare professionals: HasMany<typeof Professional>
+
+  @manyToMany(() => Patient)
+  declare patients: ManyToMany<typeof Patient>
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
