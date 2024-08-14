@@ -25,9 +25,10 @@ export default class PatientHeartRatesController {
    * @paramQuery minHeartRate - Set minimum heart rate - @type(number)
    * @paramQuery maxHeartRate - Set maximum heart rate - @type(number)
    */
-  async show({ request, params }: HttpContext) {
+  async show({ request, params, bouncer }: HttpContext) {
     const data = await request.validateUsing(heartQueryValidator)
     const patient = await this.patientService.findById(params.patientId)
+    await bouncer.with(PatientHeartRatesPolicy).authorize('view', patient)
 
     logger.info('Fetching heart rate for patient %s', params.patientId)
     return this.patientHeartRatesService.findByPatientId(data, patient.id)
