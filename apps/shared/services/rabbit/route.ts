@@ -27,7 +27,7 @@ export class Route<Controller extends Constructor<any> = any> {
     }
   }
 
-  async execute(data: AmqpContext<any>) {
+  async execute(data: AmqpContext) {
     const { reference } = this.#handler
 
     const [importModule, methodName] = reference

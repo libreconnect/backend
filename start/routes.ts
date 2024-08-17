@@ -17,7 +17,7 @@ import rabbit from '#apps/shared/services/rabbit/main'
 
 const FooController = () => import('#apps/user/controllers/foo_controller')
 
-rabbit.consume('foo', [FooController, 'test'])
+rabbit.consume('libreconnect_api_queue', [FooController, 'test'])
 
 router
   .get('/', async ({ auth }) => {
@@ -27,7 +27,6 @@ router
     }
   })
   .middleware(middleware.auth())
-
 
 router.get('/swagger', async () => {
   return AutoSwagger.default.docs(router.toJSON(), swagger)
