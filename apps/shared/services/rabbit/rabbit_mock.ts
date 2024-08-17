@@ -6,13 +6,14 @@ import {
   type LazyImport,
   type GetControllerHandlers,
 } from '@adonisjs/rabbit/types'
+import logger from '@adonisjs/core/services/logger'
 
 export default class RabbitMock extends RabbitManager {
   hasChannel: boolean = false
   #channel?: Channel
 
   constructor() {
-    console.log('RabbitMock initialized')
+    logger.info('RabbitMock initialized')
     super({ connection: { hostname: 'localhost' }, exchanges: [], queues: [] })
   }
 
