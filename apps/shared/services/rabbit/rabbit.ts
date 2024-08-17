@@ -24,6 +24,7 @@ export default class RabbitManager implements RabbitManagerContract {
   constructor(rabbitConfig: RabbitConfig) {
     this.rabbitConnection = new RabbitConnection(rabbitConfig)
     this.#config = rabbitConfig
+    logger.info('RabbitManager initialized')
   }
 
   private toBuffer(content: string | object | Buffer): Buffer {
@@ -172,8 +173,6 @@ export default class RabbitManager implements RabbitManagerContract {
     }
 
     for (const route of this.routes) {
-      console.log(route.pattern)
-
       const queueConfig = queues.find((queue) => queue.name === route.pattern)
       const consumerOptions = queueConfig?.consumerOptions || defaultConsumerOptions
 
@@ -192,7 +191,6 @@ export default class RabbitManager implements RabbitManagerContract {
               channel.ack(message)
             }
           } catch (error) {
-            console.log(message)
             if (!consumerOptions.requeueOnError) {
               logger.error(`Error processing message ${message.fields.deliveryTag}`, error.message)
               channel.nack(message, false, false)
@@ -200,7 +198,6 @@ export default class RabbitManager implements RabbitManagerContract {
             }
 
             if (consumerOptions.nackOnError) {
-              logger.info(`Nack message ${message.fields.deliveryTag}`)
               channel.nack(message)
               return
             }

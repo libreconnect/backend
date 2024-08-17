@@ -5,6 +5,7 @@ import type {
   AmqpContext,
 } from '@adonisjs/rabbit/types'
 import { moduleImporter } from '@adonisjs/fold'
+import logger from '@adonisjs/core/services/logger'
 
 export class Route<Controller extends Constructor<any> = any> {
   readonly #pattern: string
@@ -37,7 +38,7 @@ export class Route<Controller extends Constructor<any> = any> {
     if (handler) {
       await handler.call(instance, data)
     } else {
-      console.log(`Handler ${methodName} not found on controller.`)
+      logger.error(`Handler ${methodName} not found on controller.`)
     }
   }
 
