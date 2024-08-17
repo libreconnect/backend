@@ -12,9 +12,9 @@ export default class RabbitConnection {
   readonly #protocol: string
 
   constructor(rabbitConfig: RabbitConfig) {
-    this.#hostname = `${rabbitConfig.hostname}:${rabbitConfig.port}`
-    this.#protocol = rabbitConfig.protocol || 'amqp://'
-    this.#credentials = `${rabbitConfig.user}:${rabbitConfig.password}@`
+    this.#hostname = `${rabbitConfig.connection.hostname}:${rabbitConfig.connection.port}`
+    this.#protocol = rabbitConfig.connection.protocol || 'amqp://'
+    this.#credentials = `${rabbitConfig.connection.user}:${rabbitConfig.connection.password}@`
   }
 
   get url() {

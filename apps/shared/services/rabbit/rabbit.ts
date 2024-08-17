@@ -8,6 +8,8 @@ import RabbitConnection from '#apps/shared/services/rabbit/rabbit_connection'
 import { Channel, Connection, Options, Replies } from 'amqplib'
 import { LazyImport } from '@adonisjs/bouncer/types'
 import { Route } from '#apps/shared/services/rabbit/route'
+import logger from '@adonisjs/core/services/logger'
+import AmqpRequest from '#apps/shared/services/rabbit/request'
 
 export default class RabbitManager implements RabbitManagerContract {
   private readonly rabbitConnection: RabbitConnection
@@ -15,11 +17,13 @@ export default class RabbitManager implements RabbitManagerContract {
 
   #channelPromise?: Promise<Channel>
   #channel?: Channel
+  #config: RabbitConfig
 
   routes: Route[] = []
 
   constructor(rabbitConfig: RabbitConfig) {
     this.rabbitConnection = new RabbitConnection(rabbitConfig)
+    this.#config = rabbitConfig
   }
 
   private toBuffer(content: string | object | Buffer): Buffer {
@@ -131,19 +135,76 @@ export default class RabbitManager implements RabbitManagerContract {
     await this.rabbitConnection.closeConnection()
   }
 
+  async initExchanges() {
+    for (const exchange of this.#config.exchanges) {
+      await this.exchangeDeclare(exchange.name, exchange.type, exchange.options)
+    }
+  }
+
+  async initQueues() {
+    for (const queue of this.#config.queues) {
+      const options = { ...queue.options }
+
+      if (queue.consumerOptions?.limitDelivery) {
+        options.arguments = {
+          'x-delivery-limit': queue.consumerOptions.limitDelivery,
+          'x-queue-type': 'quorum',
+        }
+      }
+
+      await this.queueDeclare(queue.name, options)
+      if (queue.bindings) {
+        for (const binding of queue.bindings) {
+          await this.bindQueue(queue.name, binding.exchange, binding.routingKey)
+        }
+      }
+    }
+  }
+
   async start() {
     const channel = await this.getChannel()
+    const queues = this.#config.queues
+    const defaultConsumerOptions = {
+      autoAck: true,
+      nackOnError: true,
+      limitDelivery: 100,
+      requeueOnError: false,
+    }
+
     for (const route of this.routes) {
+      console.log(route.pattern)
+
+      const queueConfig = queues.find((queue) => queue.name === route.pattern)
+      const consumerOptions = queueConfig?.consumerOptions || defaultConsumerOptions
+
       await channel.consume(route.pattern, async (message) => {
         if (message) {
-          const parsedMessage = JSON.parse(message.content.toString())
-          await route.execute({
-            payload: parsedMessage,
-            message,
-            channel,
-          })
+          try {
+            const parsedMessage = JSON.parse(message.content.toString())
+            await route.execute({
+              payload: parsedMessage,
+              message,
+              channel,
+              request: new AmqpRequest(parsedMessage),
+            })
 
-          //channel.ack(message)
+            if (!consumerOptions.autoAck) {
+              channel.ack(message)
+            }
+          } catch (error) {
+            console.log(message)
+            if (!consumerOptions.requeueOnError) {
+              logger.error(`Error processing message ${message.fields.deliveryTag}`, error.message)
+              channel.nack(message, false, false)
+              return
+            }
+
+            if (consumerOptions.nackOnError) {
+              logger.info(`Nack message ${message.fields.deliveryTag}`)
+              channel.nack(message)
+              return
+            }
+          }
         }
       })
     }
