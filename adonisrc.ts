@@ -58,6 +58,7 @@ export default defineConfig({
     () => import('#apps/professional/routes'),
     () => import('#apps/activity/routes'),
     () => import('#apps/heart/routes'),
+    () => import('#apps/health/routes'),
   ],
 
   /*
