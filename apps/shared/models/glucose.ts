@@ -9,8 +9,43 @@ export default class Glucose extends BaseModel {
   declare id: string
 
   @column()
-  // @example(johndoe@example.com)
   declare patientId: string
+
+  @column()
+  declare factoryTimestamp: DateTime | null
+
+  @column()
+  declare timestamp: DateTime
+
+  @column()
+  declare type: number | null
+
+  @column()
+  declare valueInMgPerDl: number
+
+  @column()
+  declare trendArrow: number
+
+  @column()
+  declare trendMessage: string | null
+
+  @column()
+  declare measurementColor: number
+
+  @column()
+  declare glucoseUnits: number
+
+  @column()
+  declare value: number
+
+  @column()
+  declare isHigh: boolean
+
+  @column()
+  declare isLow: boolean
+
+  @column()
+  declare alarmType: number | null
 
   @belongsTo(() => Patient)
   declare patient: BelongsTo<typeof Patient>

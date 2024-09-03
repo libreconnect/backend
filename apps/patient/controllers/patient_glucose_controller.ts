@@ -1,4 +1,4 @@
-import GlucoseService from '#apps/patient/services/glucose_service'
+import GlucoseService from '#apps/diabetes/services/glucose_service'
 import { inject } from '@adonisjs/core'
 import { HttpContext } from '@adonisjs/core/http'
 import logger from '@adonisjs/core/services/logger'
