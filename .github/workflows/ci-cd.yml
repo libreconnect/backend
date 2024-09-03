@@ -9,6 +9,7 @@ on:
     paths-ignore:
       - 'kubernetes/**'
       - '.github/**'
+  workflow_dispatch:
 
 jobs:
   lint:
