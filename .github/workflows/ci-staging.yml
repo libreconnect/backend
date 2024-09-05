@@ -1,0 +1,72 @@
+name: CI/CD Staging Pipeline (CI - Lint, Test, Build, Release)
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+-rc[0-9]+'
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        with:
+          version: 9
+          run_install: false
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.14.0'
+      - name: Install dependencies
+        run: pnpm install
+      - name: Run linter
+        run: pnpm run lint
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: libreconnect_api_test
+        options: >-
+          --health-cmd="pg_isready -U postgres"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        with:
+          version: 9
+          run_install: false
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.14.0'
+      - name: Install dependencies
+        run: pnpm install
+      - name: Run tests
+        run: pnpm run test
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        with:
+          version: 9
+          run_install: false
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.14.0'
+      - name: Install dependencies
+        run: pnpm install
+      - name: Build
+        run: pnpm run build
