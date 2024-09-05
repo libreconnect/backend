@@ -1,0 +1,108 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "my-backend.fullname" . }}
+  labels:
+    app: {{ include "my-backend.name" . }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "my-backend.name" . }}
+  template:
+    metadata:
+      annotations:
+        vault.hashicorp.com/agent-inject: "true"
+        vault.hashicorp.com/role: "libreconnect-api"
+        vault.hashicorp.com/agent-inject-status: "update"
+        vault.hashicorp.com/agent-inject-secret-database-creds: "database/creds/libreconnect-api-role"
+        vault.hashicorp.com/agent-inject-secret-username: "database/creds/libreconnect-api-role"
+        vault.hashicorp.com/agent-inject-template-username: |
+          {{- with secret "database/creds/libreconnect-api-role" -}}
+          database_username:{{`{{ .Data.username }}`}}
+          {{- end }}
+        vault.hashicorp.com/agent-inject-template-password: |
+          {{`{{- with secret "database/creds/libreconnect-api-role" -}}`}}
+          database_password:{{`{{ .Data.password }}`}}
+          {{`{{- end }}`}}
+      labels:
+        app: {{ include "my-backend.name" . }}
+    spec:
+      serviceAccountName: {{ include "my-backend.serviceAccountName" . }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+            - "/bin/sh"
+            - "-c"
+          args:
+            - |
+              cat /vault/secrets/username
+              while true;do sleep 1;done
+          env:
+            - name: PORT
+              value: "3333"
+            - name: HOST
+              value: "localhost"
+            - name: LOG_LEVEL
+              value: "info"
+            - name: APP_KEY
+              value: "a9sof1uUjuSEpCeFDsoQKfMXuJnZUvAW"
+            - name: NODE_ENV
+              value: "production"
+
+            - name: DB_HOST
+              value: "localhost"
+{{/*            - name: DB_USER*/}}
+{{/*              valueFrom:*/}}
+{{/*                secretKeyRef:*/}}
+{{/*                  name: vault-secrets*/}}
+{{/*                  key: db-username*/}}
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: vault-secrets
+                  key: db-password
+            - name: DB_NAME
+              value: "libreconnect_api"
+            - name: DB_LOGGING
+              value: "false"
+
+            - name: KEYCLOAK_REALM
+              value: "libreconnect"
+            - name: KEYCLOAK_URL
+              value: "http://localhost:8080"
+            - name: KEYCLOAK_CLIENT_ID
+              value: "api"
+            - name: KEYCLOAK_CLIENT_SECRET
+              value: "8gVRp9mN99BYBgnpbgkzsyNmou0GgXq1"
+
+            - name: RABBIT_HOST
+              value: "localhost"
+            - name: RABBIT_USER
+              value: "rabbit"
+            - name: RABBIT_PASSWORD
+              value: "rabbit"
+            - name: RABBIT_PORT
+              value: "5672"
+            - name: RABBIT_PROTOCOL
+              value: "amqp"
+          ports:
+            - containerPort: 8080
+{{/*          volumeMounts:*/}}
+{{/*            - name: vault-secret*/}}
+{{/*              mountPath: /vault/secrets*/}}
+{{/*      volumes:*/}}
+{{/*        - name: vault-secret*/}}
+{{/*          emptyDir: {}*/}}
+
+
+
+  vault write auth/kubernetes/role/auth-role-operator \
+  bound_service_account_names=vault-secrets-operator-controller-manager \
+  bound_service_account_namespaces=vault-secrets-operator-system \
+  token_ttl=0 \
+  token_period=120 \
+  token_policies=auth-policy-operator \
+  audience=vault
